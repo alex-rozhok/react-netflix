@@ -1,0 +1,47 @@
+button {
+  background-color: transparent;
+  border: 1px solid #000;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.container {
+  padding: 0 15px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.row {
+  display: flex;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30px, auto));
+  justify-content: start;
+  gap: 20px;
+}
+
+.counter {
+  width: 50px;
+  padding: 0 20px;
+  margin: 0;
+  text-align: center;
+  border: 1px solid #000;
+}
+
+.form {
+  margin: 20px 0;
+}
+
+.filter__item button{
+  border: none;
+}
+
+.filter__item.active button{
+  border-bottom: 2px solid red;
+}
