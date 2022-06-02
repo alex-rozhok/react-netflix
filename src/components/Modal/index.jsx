@@ -10,6 +10,7 @@ export const Modal = ({ children, closeModal, isOpen }) => {
     isOpen
       ? (document.body.style.overflow = 'hidden')
       : (document.body.style.overflow = '');
+    return () => (document.body.style.overflow = '');
   }, [isOpen]);
   return (
     <>

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Hero, Movies, Footer, FilterBar } from './components';
+import { Hero, Movies, Footer, FilterBar, ErrorBoundary } from './components';
 import './styles/style.less';
 
 let data = [
@@ -117,11 +117,13 @@ function App() {
           changeSort={setSortBy}
           sortBy={sortBy}
         />
-        <Movies
-          movies={moviesState}
-          sortBy={sortBy}
-          setMoviesData={setMoviesData}
-        />
+        <ErrorBoundary>
+          <Movies
+            movies={moviesState}
+            sortBy={sortBy}
+            setMoviesData={setMoviesData}
+          />
+        </ErrorBoundary>
       </main>
       <Footer />
     </>

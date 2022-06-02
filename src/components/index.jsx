@@ -9,3 +9,4 @@ export { FilterList } from './FilterList';
 export { Sort } from './Sort';
 export { Dropdown } from './Dropdown';
 export { MovieForm } from './MovieForm';
+export { ErrorBoundary } from './ErrorBoundary';
