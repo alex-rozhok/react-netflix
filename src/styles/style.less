@@ -1,5 +1,46 @@
+@import 'fonts.less';
+@import 'reset.less';
+
+html {
+  font-size: 10px;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #232323;
+  font-size: 1.6rem;
+  color: #fff;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex-grow: 1;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+svg {
+  max-width: 100%;
+  max-height: 100%;
+  fill: currentColor;
 }

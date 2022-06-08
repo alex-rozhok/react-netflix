@@ -1,0 +1,82 @@
+.movie {
+  padding: 25px 0 50px;
+
+  &__count {
+    font-size: 2rem;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px 60px;
+    padding: 25px 0;
+  }
+
+  &__item {
+    position: relative;
+    font-size: 1.4rem;
+  }
+
+  &__link {
+    color: rgba(255, 255, 255, 0.7);
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  &__poster {
+    position: relative;
+    padding: 75% 0;
+  }
+
+  &__img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__info {
+    padding: 20px 0;
+    display: grid;
+    grid-template-columns: 1fr 65px;
+    gap: 5px 20px;
+  }
+
+  &__title {
+    font-weight: 500;
+    font-size: 1.8rem;
+  }
+
+  &__year {
+    border: 1px solid #979797;
+    border-radius: 4px;
+    text-align: center;
+    padding: .5em .7em;
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+}
+
+.options {
+  &__wrapper {
+    top: 0;
+    right: 0;
+  }
+
+  &__item {
+    padding: 5px 15px;
+    width: 190px;
+    text-align: left;
+    font-size: 1.6rem;
+  }
+}

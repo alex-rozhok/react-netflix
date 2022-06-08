@@ -1,0 +1,25 @@
+.hero {
+  padding: 20px 0;
+  background: url('../../img/banner.jpg') 50%/cover;
+
+  &__addButton {
+    color: #F65261;
+    border-radius: 4px;
+    font-weight: 600;
+    padding: 1rem 1.8rem;
+    font-size: 2rem;
+    background-color: fadeout(#606060, 4%);
+
+    &:hover {
+      background-color: darken(#606060, 10%);
+    }
+  }
+
+  &__search {
+    min-height: 30vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 60px;
+  }
+}
