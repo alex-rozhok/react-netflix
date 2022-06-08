@@ -72,7 +72,13 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
+    alias: {
+      '@components': path.resolve(__dirname, 'src/components/'),
+      '@common': path.resolve(__dirname, 'src/components/common/'),
+      '@icons': path.resolve(__dirname, 'src/icons/'),
+      '@img': path.resolve(__dirname, 'src/img/'),
+    },
   },
   optimization: optimization(),
   devServer: {

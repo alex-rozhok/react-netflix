@@ -5,7 +5,7 @@ import { MoviePoster } from './MoviePoster';
 import { MovieInfo } from './MovieInfo';
 import { MovieOptions } from './MovieOptions';
 
-export const MovieItem = ({ movie, setMoviesData }) => {
+export const MovieItem = ({ movie, deleteMovie, changeMoviesData }) => {
   const [showOptions, setShowOptions] = useState(false);
   const handlerMouseOver = () => setShowOptions(true);
   const handlerMouseLeave = () => setShowOptions(false);
@@ -19,8 +19,9 @@ export const MovieItem = ({ movie, setMoviesData }) => {
       {showOptions && (
         <MovieOptions
           movie={movie}
-          setMoviesData={setMoviesData}
+          deleteMovie={deleteMovie}
           setShowOptions={setShowOptions}
+          changeMoviesData={changeMoviesData}
         />
       )}
       <a className={styles.movie__link} href={movie.href}>
@@ -36,5 +37,6 @@ export const MovieItem = ({ movie, setMoviesData }) => {
 
 MovieItem.propTypes = {
   movie: PropTypes.object.isRequired,
-  setMoviesData: PropTypes.func,
+  deleteMovie: PropTypes.func,
+  changeMoviesData: PropTypes.func,
 };

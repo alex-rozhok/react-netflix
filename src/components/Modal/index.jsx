@@ -4,7 +4,7 @@ import styles from './style.module.less';
 import { Portal } from './Portal';
 import { Body } from './ModalBody';
 import { Footer } from './ModalFooter';
-import { Button } from '../../UI';
+import { Button } from '@components';
 export const Modal = ({ children, closeModal, isOpen }) => {
   useEffect(() => {
     isOpen
@@ -19,7 +19,9 @@ export const Modal = ({ children, closeModal, isOpen }) => {
           <div className={styles.modal}>
             <div className={styles.modal__window}>
               <div className={styles.modal__header}>
-                <Button onClick={closeModal} view="close_big"></Button>
+                <Button onClick={closeModal} view="close_big">
+                  <span className="sr-only">close modal</span>
+                </Button>
               </div>
               {children}
             </div>

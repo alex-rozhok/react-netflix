@@ -1,44 +1,68 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styles from './style.module.less';
-import { Calendar } from '../../icons';
-import { Input, Label, Textarea } from '../../UI';
+import { Calendar } from '@icons';
+import { Input, Label, Textarea } from '@components';
 
-export const MovieForm = ({ id }) => {
-  const [value, setValue] = useState('');
+export const MovieForm = ({
+  formId,
+  movie,
+  changeMoviesData,
+  additionalSubmitHandler,
+}) => {
+  const initialState = {
+    id: new Date().getTime(),
+    title: '',
+    genres: [],
+    release_date: '',
+    poster_path: '',
+    href: '',
+    overview: '',
+  };
+
+  const stateData = movie || initialState;
+  const [state, dispatch] = useReducer((state, action) => {
+    return { ...state, ...action };
+  }, stateData);
 
   const handlerSubmit = (e) => {
     e.preventDefault();
+    changeMoviesData(state);
+    additionalSubmitHandler();
   };
 
   const handlerReset = () => {
-    setValue('');
+    dispatch(stateData);
   };
-
+  const getValue = () => event.target.value;
   return (
     <form
-      id={id}
+      id={formId}
       onSubmit={handlerSubmit}
       onReset={handlerReset}
       className={styles.form}
     >
       <Label label="TITLE">
         <Input
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={state.title}
+          onChange={() => dispatch({ title: getValue() })}
           placeholder="Title"
         />
       </Label>
       <Label label="RELEASE DATE">
         <Input
-          value=""
-          onChange={() => {}}
+          value={state.release_date}
+          onChange={() => dispatch({ release_date: getValue() })}
           placeholder="Select Date"
           icon={<Calendar />}
         />
       </Label>
       <Label label="MOVIE URL">
-        <Input value="" onChange={() => {}} placeholder="https://" />
+        <Input
+          value={state.href}
+          onChange={() => dispatch({ href: getValue() })}
+          placeholder="https://"
+        />
       </Label>
       <Label label="RATING">
         <Input
@@ -51,7 +75,11 @@ export const MovieForm = ({ id }) => {
         />
       </Label>
       <Label label="GENRE">
-        <Input value="" onChange={() => {}} placeholder="Select Genre" />
+        <Input
+          value={state.genres.join(', ')}
+          onChange={() => {}}
+          placeholder="Select Genre"
+        />
       </Label>
       <Label label="RUNTIME">
         <Input
@@ -64,8 +92,8 @@ export const MovieForm = ({ id }) => {
       <div className={styles.form__full_field}>
         <Label label="OVERVIEW">
           <Textarea
-            value=""
-            onChange={() => {}}
+            value={state.overview}
+            onChange={() => dispatch({ overview: getValue() })}
             placeholder="Movie description"
           />
         </Label>
@@ -73,7 +101,13 @@ export const MovieForm = ({ id }) => {
     </form>
   );
 };
-
+MovieForm.defaultProps = {
+  additionalSubmitHandler: () => {},
+};
 MovieForm.propTypes = {
-  id: PropTypes.string,
+  formId: PropTypes.string,
+  data: PropTypes.array,
+  movie: PropTypes.object,
+  changeMoviesData: PropTypes.func.isRequired,
+  additionalSubmitHandler: PropTypes.func,
 };

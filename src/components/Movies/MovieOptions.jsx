@@ -1,70 +1,86 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styles from './style.module.less';
-import { ThreeDots } from '../../icons';
-import { Modal, MovieForm, Dropdown } from '../index';
-import { Button } from '../../UI';
+import { ThreeDots } from '@icons';
+import { Modal, MovieForm, Dropdown, Button } from '@components';
 
-export const MovieOptions = ({ movie, setMoviesData, setShowOptions }) => {
-  const [isOptionsDropdown, setIsOptionsDropdown] = useState(false);
-  const [isDeleteModal, setIsDeleteModal] = useState(false);
-  const [isEditModal, setIsEditModal] = useState(false);
-
-  const openDelete = () => {
-    setIsDeleteModal(true);
-    setIsOptionsDropdown(false);
+export const MovieOptions = ({
+  movie,
+  deleteMovie,
+  setShowOptions,
+  changeMoviesData,
+}) => {
+  const initialState = {
+    isOptionsDropdown: false,
+    isModalOpened: false,
+    modalType: null,
   };
 
-  const openEdit = () => {
-    setIsEditModal(true);
-    setIsOptionsDropdown(false);
-  };
+  const [state, dispatch] = useReducer((state, action) => {
+    return { ...state, ...action };
+  }, initialState);
 
-  const closeDelete = () => {
-    setShowOptions(false);
-    setIsDeleteModal(false);
+  const toggleDropdown = () =>
+    dispatch({
+      isOptionsDropdown: !state.isOptionsDropdown,
+    });
+
+  const closeDropdown = () => dispatch({ isOptionsDropdown: false });
+
+  const openModal = (modalType) => {
+    dispatch({
+      isModalOpened: true,
+      isOptionsDropdown: false,
+      modalType,
+    });
   };
-  const closeEdit = () => {
-    setShowOptions(false);
-    setIsEditModal(false);
-  };
+  const closeModal = () => setShowOptions(false);
 
   const confirmDelete = () => {
-    setMoviesData((prev) => prev.filter((el) => el.id !== movie.id));
-    setIsDeleteModal(false);
+    deleteMovie(movie.id);
+    closeModal();
   };
 
+  const listOptions = [
+    { view: 'listItem', onClick: () => openModal('edit'), name: 'Edit' },
+    { view: 'listItem', onClick: () => openModal('delete'), name: 'Delete' },
+  ];
+
+  const editMovieButtons = [
+    { view: 'secondary', type: 'reset', name: 'RESET', form: 'editMovie' },
+    { view: 'main', type: 'submit', name: 'SUBMIT', form: 'editMovie' },
+  ];
+
+  const renderOptions = ({ name, ...rest }) => (
+    <Button key={name} {...rest}>
+      {name}
+    </Button>
+  );
   return (
     <>
       <div className={styles.movie__dropdown}>
         <Dropdown
-          isShow={isOptionsDropdown}
-          closeDropdown={() => setIsOptionsDropdown(false)}
+          isShow={state.isOptionsDropdown}
+          closeDropdown={closeDropdown}
         >
-          <Dropdown.Button
-            view="circle"
-            onClick={() => {
-              setIsOptionsDropdown(!isOptionsDropdown);
-            }}
-          >
+          <Dropdown.Button view="circle" onClick={toggleDropdown}>
             <ThreeDots />
           </Dropdown.Button>
           <Dropdown.Body
-            isShow={isOptionsDropdown}
-            closeDropdown={() => setIsOptionsDropdown(false)}
+            isShow={state.isOptionsDropdown}
+            closeDropdown={closeDropdown}
             classes={styles.options__wrapper}
             closeButton={true}
           >
-            <Button view="listItem" onClick={openEdit}>
-              Edit
-            </Button>
-            <Button view="listItem" onClick={openDelete}>
-              Delete
-            </Button>
+            {listOptions.map(renderOptions)}
           </Dropdown.Body>
         </Dropdown>
       </div>
-      <Modal isOpen={isDeleteModal} closeModal={closeDelete}>
+
+      <Modal
+        isOpen={state.isModalOpened && state.modalType === 'delete'}
+        closeModal={closeModal}
+      >
         <Modal.Body title={'DELETE MOVIE'}>
           <p>Are you sure you want to delete this movie?</p>
         </Modal.Body>
@@ -75,18 +91,19 @@ export const MovieOptions = ({ movie, setMoviesData, setShowOptions }) => {
         </Modal.Footer>
       </Modal>
 
-      <Modal isOpen={isEditModal} closeModal={closeEdit}>
+      <Modal
+        isOpen={state.isModalOpened && state.modalType === 'edit'}
+        closeModal={closeModal}
+      >
         <Modal.Body title={'EDIT MOVIE'}>
-          <MovieForm id="editMovie" />
+          <MovieForm
+            formId="editMovie"
+            movie={movie}
+            changeMoviesData={changeMoviesData}
+            additionalSubmitHandler={closeModal}
+          />
         </Modal.Body>
-        <Modal.Footer>
-          <Button form="editMovie" type="reset" view="secondary">
-            RESET
-          </Button>
-          <Button form="editMovie" type="submit" view="main">
-            SUBMIT
-          </Button>
-        </Modal.Footer>
+        <Modal.Footer>{editMovieButtons.map(renderOptions)}</Modal.Footer>
       </Modal>
     </>
   );
@@ -94,6 +111,7 @@ export const MovieOptions = ({ movie, setMoviesData, setShowOptions }) => {
 
 MovieOptions.propTypes = {
   movie: PropTypes.object.isRequired,
-  setMoviesData: PropTypes.func.isRequired,
+  deleteMovie: PropTypes.func.isRequired,
   setShowOptions: PropTypes.func,
+  changeMoviesData: PropTypes.func,
 };

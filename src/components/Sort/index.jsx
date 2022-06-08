@@ -1,34 +1,35 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown } from '../index';
-import { CaretDown } from '../../icons';
+import { Dropdown, Button } from '@components';
+import { CaretDown } from '@icons';
 import styles from './style.module.less';
-import { Button } from '../../UI';
 
 export const Sort = ({ changeSort, sortBy }) => {
-  const [isSortDropdown, setIsSortDropdown] = useState(false);
+  const [isDropdownOpened, setIsDropdownOpened] = useState(false);
+  const toggleDropdown = () => setIsDropdownOpened(!isDropdownOpened);
+  const closeDropdown = () => setIsDropdownOpened(false);
   const sortItems = [
     { value: 'release_date', name: 'RELEASE DATE' },
     { value: 'title', name: 'NAME' },
   ];
   const changeHandler = (e) => {
     changeSort(e.target.value);
-    setIsSortDropdown(false);
+    closeDropdown();
   };
   return (
     <div className={styles.sort__row}>
       <p className={styles.sort__by}>SORT BY</p>
-      <Dropdown
-        isShow={isSortDropdown}
-        closeDropdown={() => setIsSortDropdown(false)}
-      >
-        <Dropdown.Button onClick={() => setIsSortDropdown(!isSortDropdown)}>
+      <Dropdown isShow={isDropdownOpened} closeDropdown={closeDropdown}>
+        <Dropdown.Button onClick={toggleDropdown}>
           {sortItems.find((el) => el.value === sortBy).name}
           <span className={styles.sort__toggle_icon}>
             <CaretDown />
           </span>
         </Dropdown.Button>
-        <Dropdown.Body classes={styles.sort__dropdown} isShow={isSortDropdown}>
+        <Dropdown.Body
+          classes={styles.sort__dropdown}
+          isShow={isDropdownOpened}
+        >
           {sortItems.map((item) => (
             <Button
               key={item.value}
