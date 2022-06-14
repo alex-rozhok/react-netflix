@@ -1,0 +1,6 @@
+export const FILTER_MOVIE = 'FILTER_MOVIE'
+export const CHANGE_GENRE = 'CHANGE_GENRE'
+export const CHANGE_SORT = 'CHANGE_SORT'
+export const DELETE_MOVIE = 'DELETE_MOVIE'
+export const CHANGE_MOVIES_DATA = 'CHANGE_MOVIES_DATA'
+export const SELECT_MOVIE = 'SELECT_MOVIE'

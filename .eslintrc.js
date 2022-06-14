@@ -9,6 +9,7 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'prettier',
+    'plugin:@typescript-eslint/recommended'
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -18,7 +19,8 @@ module.exports = {
     sourceType: 'module'
   },
   plugins: [
-    'react'
+    'react',
+    '@typescript-eslint'
   ],
   ignorePatterns: [
     'webpack.config.js',
@@ -30,5 +32,7 @@ module.exports = {
     'max-len': ['warn', { code: 80, ignoreComments: true }],
     'no-var': 'error',
     'spaced-comment': ['error', 'always'],
+    '@typescript-eslint/no-unused-vars': ['error'],
+    '@typescript-eslint/no-empty-function': 'off'
   }
 }
