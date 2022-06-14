@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Input } from '../../UI';
+import { Button, Input } from '@components';
 import styles from './style.module.less';
 
 export const Search = () => {

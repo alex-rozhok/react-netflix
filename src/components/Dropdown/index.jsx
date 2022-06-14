@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from './style.module.less';
-import { Button } from '../../UI';
 import { Body } from './DropdownBody';
+import { Button } from '@common';
 
 export const Dropdown = ({ children, isShow, closeDropdown }) => {
   const dropdown = useRef();
@@ -13,12 +13,8 @@ export const Dropdown = ({ children, isShow, closeDropdown }) => {
   }, []);
 
   useEffect(() => {
-    if (isShow) {
-      window.addEventListener('click', clickOutside);
-    } else {
-      window.removeEventListener('click', clickOutside);
-    }
-    return () => window.removeEventListener('click', clickOutside);
+    isShow && window.addEventListener('click', clickOutside, true);
+    return () => window.removeEventListener('click', clickOutside, true);
   }, [isShow, clickOutside]);
 
   return (

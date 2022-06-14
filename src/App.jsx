@@ -1,11 +1,20 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Hero, Movies, Footer, FilterBar, ErrorBoundary } from './components';
+import React, { useCallback, useEffect, useReducer, useRef } from 'react';
 import './styles/style.less';
+import { Hero, Movies, Footer, FilterBar, ErrorBoundary } from '@components';
+import { reducer } from './reducer/reducer';
+import {
+  deleteAction,
+  genresAction,
+  moviesAction,
+  sortAction,
+  changeMoviesDataAction,
+} from './reducer/actions';
 
 let data = [
   {
     id: 1,
     title: 'Star Wars: The Last Jedi',
+    overview: 'movie overview',
     genres: ['Fantasy', 'Adventure', 'Science Fiction'],
     release_date: '2017',
     poster_path:
@@ -15,6 +24,7 @@ let data = [
   {
     id: 2,
     title: 'Black Panther',
+    overview: 'movie overview',
     genres: ['Action', 'Adventure', 'Fantasy', 'Science Fiction'],
     release_date: '2018',
     poster_path:
@@ -24,6 +34,7 @@ let data = [
   {
     id: 3,
     title: 'Coco',
+    overview: 'movie overview',
     genres: ['Adventure', 'Comedy', 'Family', 'Animation'],
     release_date: '2019',
     poster_path:
@@ -33,6 +44,7 @@ let data = [
   {
     id: 4,
     title: 'Ready Player One',
+    overview: 'movie overview',
     genres: ['Adventure', 'Science Fiction', 'Action'],
     release_date: '2018',
     poster_path:
@@ -42,6 +54,7 @@ let data = [
   {
     id: 5,
     title: 'Tomb Raider',
+    overview: 'movie overview',
     genres: ['Action', 'Adventure'],
     release_date: '2018',
     poster_path:
@@ -51,6 +64,7 @@ let data = [
   {
     id: 6,
     title: 'Thor: Ragnarok',
+    overview: 'movie overview',
     genres: ['Action', 'Adventure', 'Fantasy'],
     release_date: '2017',
     poster_path:
@@ -65,69 +79,84 @@ data.forEach((item) => {
 });
 
 genresArr = Array.from(new Set(genresArr)).sort();
-genresArr.unshift('All');
-let genres = genresArr.reduce((res, item) => {
-  res.push({ name: item, active: item === 'All' });
-  return res;
-}, []);
+let genres = genresArr.reduce(
+  (res, item) => {
+    res.push({ name: item, active: false });
+    return res;
+  },
+  [{ name: 'All', active: true }],
+);
 
-function App() {
-  const [moviesData, setMoviesData] = useState(data);
-  const [moviesState, setMoviesState] = useState(moviesData);
-  const [genresState, setGenresState] = useState(genres);
+const initialState = {
+  data,
+  movies: data,
+  sort: 'release_date',
+  genres,
+};
+
+const App = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
   const currentFilter = useRef('All');
-  const [sortBy, setSortBy] = useState('release_date');
 
   const filterMovies = useCallback(
     (selectedGenre) => {
       const filteredMovies =
         selectedGenre === 'All'
-          ? moviesData
-          : moviesData.filter((movie) => movie.genres.includes(selectedGenre));
-      setMoviesState(filteredMovies);
+          ? state.data
+          : state.data.filter((movie) => movie.genres.includes(selectedGenre));
+      dispatch(moviesAction(filteredMovies));
     },
-    [moviesData],
+    [state.data],
   );
   const changeFilter = (clickedGenre) => {
     if (currentFilter.current === clickedGenre) {
       return;
     } else {
       currentFilter.current = clickedGenre;
-      const changedGenre = genresState.map((genre) => {
+      const changedGenre = state.genres.map((genre) => {
         return genre.name === clickedGenre
           ? { ...genre, active: true }
           : { ...genre, active: false };
       });
-      setGenresState(changedGenre);
+      dispatch(genresAction(changedGenre));
       filterMovies(clickedGenre);
     }
   };
 
   useEffect(() => {
     filterMovies(currentFilter.current);
-  }, [moviesData, filterMovies]);
+  }, [filterMovies]);
+
+  const changeSort = (payload) => {
+    payload === state.sort ? null : dispatch(sortAction(payload));
+  };
+  const deleteMovie = (payload) => dispatch(deleteAction(payload));
+  const changeMoviesData = (payload) => {
+    dispatch(changeMoviesDataAction(payload));
+  };
 
   return (
     <>
-      <Hero />
+      <Hero changeMoviesData={changeMoviesData} />
       <main className="main">
         <FilterBar
-          genres={genresState}
+          genres={state.genres}
           changeFilter={changeFilter}
-          changeSort={setSortBy}
-          sortBy={sortBy}
+          changeSort={changeSort}
+          sortBy={state.sort}
         />
         <ErrorBoundary>
           <Movies
-            movies={moviesState}
-            sortBy={sortBy}
-            setMoviesData={setMoviesData}
+            movies={state.movies}
+            sortBy={state.sort}
+            deleteMovie={deleteMovie}
+            changeMoviesData={changeMoviesData}
           />
         </ErrorBoundary>
       </main>
       <Footer />
     </>
   );
-}
+};
 
 export default App;

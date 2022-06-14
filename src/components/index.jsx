@@ -10,3 +10,4 @@ export { Sort } from './Sort';
 export { Dropdown } from './Dropdown';
 export { MovieForm } from './MovieForm';
 export { ErrorBoundary } from './ErrorBoundary';
+export { Button, Input, Textarea, Label } from './common';
