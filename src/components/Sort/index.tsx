@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Dropdown, Button } from '@components';
 import { CaretDownIcon } from '@icons';
 import styles from './style.module.less';
@@ -23,8 +23,8 @@ export const Sort: FC = () => {
     { value: 'release_date', name: 'RELEASE DATE' },
     { value: 'title', name: 'NAME' },
   ];
-  const changeHandler = (e: MouseEvent<HTMLButtonElement>) => {
-    changeSort(e.target.value);
+  const changeHandler = (value: string) => {
+    changeSort(value);
     closeDropdown();
   };
 
@@ -43,7 +43,7 @@ export const Sort: FC = () => {
             <Button
               key={item.value}
               value={item.value}
-              onClick={changeHandler}
+              onClick={() => changeHandler(item.value)}
               view="listItem"
             >
               {item.name}
