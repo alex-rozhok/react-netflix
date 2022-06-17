@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 
-export const CaretDownIcon: FC = () => {
+export const CaretDownIcon = (): ReactElement => {
   return (
     <svg width="10" height="7" viewBox="0 0 10 7" fill="none">
       <path

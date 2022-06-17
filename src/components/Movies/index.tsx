@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import classNames from 'classnames/bind';
 import styles from './style.module.less';
 import { MovieItem } from './MovieItem';
 import { useAppContext } from '@hooks';
 
-export const Movies: FC = () => {
+export const Movies = (): ReactElement => {
   const {
     state: { movies, sort },
   } = useAppContext();

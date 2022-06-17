@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 
-export const ThreeDotsIcon: FC = () => {
+export const ThreeDotsIcon = (): ReactElement => {
   return (
     <svg viewBox="0 0 29.96 122.88">
       <path

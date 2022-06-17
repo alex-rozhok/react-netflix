@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 
-interface MovieGenresProps {
+interface IMovieGenresProps {
   genres: string[];
 }
 
-export const MovieGenres: FC<MovieGenresProps> = ({ genres }) => (
+export const MovieGenres = ({ genres }: IMovieGenresProps): ReactElement => (
   <p>{genres.length === 2 ? genres.join(' & ') : genres.join(', ')}</p>
 );

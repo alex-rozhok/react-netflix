@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import styles from './style.module.less';
 import { Poster, MovieGenres } from '@components';
 import { IMovie } from '@types';
@@ -7,7 +7,7 @@ interface SelectedMovieProps {
   movie: IMovie;
 }
 
-export const SelectedMovie: FC<SelectedMovieProps> = ({ movie }) => {
+export const SelectedMovie = ({ movie }: SelectedMovieProps): ReactElement => {
   const runtime = (() => {
     const hours = Math.trunc(+movie.runtime / 60);
     const minutes = +movie.runtime % 60;
