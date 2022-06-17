@@ -1,11 +1,11 @@
-import { FC, ReactNode, useEffect } from 'react';
+import { ReactElement, ReactNode, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
-interface PortalProps {
+interface IPortalProps {
   children: ReactNode;
 }
 
-export const Portal: FC<PortalProps> = ({ children }) => {
+export const Portal = ({ children }: IPortalProps): ReactElement => {
   const modalWrap = document.createElement('div');
 
   useEffect(() => {

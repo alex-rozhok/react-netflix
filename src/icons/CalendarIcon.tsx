@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 
-export const CalendarIcon: FC = () => {
+export const CalendarIcon = (): ReactElement => {
   return (
     <svg width="24" height="22" viewBox="0 0 24 22" fill="none">
       <path

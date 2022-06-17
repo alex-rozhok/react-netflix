@@ -1,51 +1,44 @@
 import { IMovie } from '@types';
-import {
-  FILTER_MOVIE,
-  CHANGE_GENRE,
-  CHANGE_SORT,
-  DELETE_MOVIE,
-  CHANGE_MOVIES_DATA,
-  SELECT_MOVIE,
-} from './types';
+import TYPE from './types';
 
 export const filterMoviesAction = (payload: string) => {
   return {
-    type: FILTER_MOVIE,
+    type: TYPE.FILTER_MOVIE,
     payload,
   };
 };
 
 export const changeGenresAction = (payload: string) => {
   return {
-    type: CHANGE_GENRE,
+    type: TYPE.CHANGE_GENRE,
     payload,
   };
 };
 
 export const sortAction = (payload: string) => {
   return {
-    type: CHANGE_SORT,
+    type: TYPE.CHANGE_SORT,
     payload,
   };
 };
 
 export const deleteAction = (payload: IMovie) => {
   return {
-    type: DELETE_MOVIE,
+    type: TYPE.DELETE_MOVIE,
     payload,
   };
 };
 
 export const changeMoviesDataAction = (payload: IMovie) => {
   return {
-    type: CHANGE_MOVIES_DATA,
+    type: TYPE.CHANGE_MOVIES_DATA,
     payload,
   };
 };
 
 export const showMovieAction = (payload: IMovie | null) => {
   return {
-    type: SELECT_MOVIE,
+    type: TYPE.SELECT_MOVIE,
     payload,
   };
 };

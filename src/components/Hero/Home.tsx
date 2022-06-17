@@ -1,8 +1,8 @@
-import React, { FC, useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import styles from './style.module.less';
 import { Logo, Search, Modal, MovieForm, Button } from '@components';
 
-export const Home: FC = () => {
+export const Home = (): ReactElement => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const openModalHandler = () => setModalIsOpen(true);
   const closeModalHandler = () => setModalIsOpen(false);

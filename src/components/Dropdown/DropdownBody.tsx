@@ -1,15 +1,15 @@
-import React, { FC, ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import classNames from 'classnames/bind';
 import styles from './style.module.less';
 import { Button } from '@components';
 import { useDropdownContext } from './DropdownContext';
 
-export interface BodyProps {
+export interface IBodyProps {
   children: ReactElement[];
   classes?: string;
 }
 
-export const Body: FC<BodyProps> = ({ children, classes }) => {
+export const Body = ({ children, classes }: IBodyProps): ReactElement => {
   const { isShow, isCloseButton, closeDropdown } = useDropdownContext();
   return (
     <>

@@ -1,13 +1,13 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import styles from './style.module.less';
 import { Logo, Button, SelectedMovie } from '@components';
 import { useAppContext } from '@hooks';
 import { showMovieAction } from '@actions';
 import { SearchIcon } from '@icons';
 
-export const Movie: FC = () => {
+export const Movie = (): ReactElement => {
   const {
-    state: { selectMovie },
+    state: { selectedMovie },
     dispatch,
   } = useAppContext();
   return (
@@ -20,7 +20,7 @@ export const Movie: FC = () => {
               <SearchIcon />
             </Button>
           </div>
-          <SelectedMovie movie={selectMovie} />
+          <SelectedMovie movie={selectedMovie} />
         </div>
       </section>
     </>

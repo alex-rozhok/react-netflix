@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { useAppContext } from '@hooks';
 import { Movie } from './Movie';
 import { Home } from './Home';
 
-export const Hero: FC = () => {
+export const Hero = (): ReactElement => {
   const {
-    state: { selectMovie },
+    state: { selectedMovie },
   } = useAppContext();
 
-  return <>{selectMovie ? <Movie /> : <Home />}</>;
+  return <>{selectedMovie ? <Movie /> : <Home />}</>;
 };

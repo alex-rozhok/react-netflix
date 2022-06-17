@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import styles from './style.module.less';
 
-export const Logo: FC = () => (
+export const Logo = (): ReactElement => (
   <a className={styles.logo} href="/">
     <strong>netflix</strong>roulette
   </a>

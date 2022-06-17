@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, ReactElement, useState } from 'react';
 import styles from './style.module.less';
 import { Poster, MovieGenres } from '@components';
 import { MovieOptions } from './MovieOptions';
@@ -6,23 +6,23 @@ import { useAppContext } from '@hooks';
 import { showMovieAction } from '@actions';
 import { IMovie } from '@types';
 
-interface MovieItemProps {
+interface IMovieItemProps {
   movie: IMovie;
 }
 
-export const MovieItem: FC<MovieItemProps> = ({ movie }) => {
+export const MovieItem = ({ movie }: IMovieItemProps): ReactElement => {
   const { title, genres, release_date, poster_path } = movie;
   const [showOptions, setShowOptions] = useState<boolean>(false);
   const handlerMouseOver = () => setShowOptions(true);
   const handlerMouseLeave = () => setShowOptions(false);
 
   const {
-    state: { selectMovie },
+    state: { selectedMovie },
     dispatch,
   } = useAppContext();
 
   const clickHandler = () => {
-    if (selectMovie?.id !== movie.id) {
+    if (selectedMovie?.id !== movie.id) {
       dispatch(showMovieAction(movie));
       document.documentElement.scrollTop = 0;
     }

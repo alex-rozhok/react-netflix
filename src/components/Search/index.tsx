@@ -1,8 +1,8 @@
-import React, { FC, FormEvent, useState } from 'react';
+import React, { FormEvent, ReactElement, useState } from 'react';
 import { Button, Input } from '@components';
 import styles from './style.module.less';
 
-export const Search: FC = () => {
+export const Search = (): ReactElement => {
   const [value, setValue] = useState<string>('');
   const handlerSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

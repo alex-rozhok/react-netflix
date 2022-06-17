@@ -1,13 +1,13 @@
 import React, { FC, ReactElement, useEffect, useRef } from 'react';
 import styles from './style.module.less';
-import { Body, BodyProps } from './DropdownBody';
+import { Body, IBodyProps } from './DropdownBody';
 import { Button } from '@common';
 import { DropdownProvider } from './DropdownContext';
-import { ButtonProps } from 'components/common/Button';
+import { IButtonProps } from 'components/common/Button';
 
-export type DropdownFC<P = Record<string, unknown>> = React.FC<P> & {
-  Button: React.FC<ButtonProps>;
-  Body: React.FC<BodyProps>;
+export type DropdownFC<P> = React.FC<P> & {
+  Button: React.FC<IButtonProps>;
+  Body: React.FC<IBodyProps>;
 };
 
 export interface IDropdown {
@@ -27,7 +27,7 @@ export const DropdownWrapper: FC<IDropdown> = ({
 
   const clickOutside = (e: MouseEvent) => {
     if (dropdown.current) {
-      !dropdown.current.contains(e.target) && closeDropdown();
+      !dropdown.current.contains(e.target as Node) && closeDropdown();
     }
   };
 
@@ -52,8 +52,8 @@ export const DropdownWrapper: FC<IDropdown> = ({
 };
 
 const DropdownMemo = React.memo(DropdownWrapper);
-export const Dropdown: DropdownFC<IDropdown> = (props) => (
-  <DropdownMemo {...props} />
+export const Dropdown = ({ children, ...props }: IDropdown) => (
+  <DropdownMemo {...props}>{children}</DropdownMemo>
 );
 
 Dropdown.Button = Button;

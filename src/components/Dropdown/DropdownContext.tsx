@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useContext } from 'react';
 import { createContext } from 'react';
 
-const DropdownContext = createContext();
+const DropdownContext = createContext(null);
 
 export const DropdownProvider = ({ children, value }) => {
   return (

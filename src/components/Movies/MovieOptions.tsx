@@ -1,4 +1,4 @@
-import React, { FC, useReducer } from 'react';
+import React, { ReactElement, useReducer } from 'react';
 import styles from './style.module.less';
 import { ThreeDotsIcon } from '@icons';
 import { Modal, MovieForm, Dropdown, Button } from '@components';
@@ -6,27 +6,46 @@ import { deleteAction, showMovieAction } from '@actions';
 import { useAppContext } from '@hooks';
 import { IMovie } from '@types';
 
-interface MovieOptionsProps {
+interface IMovieOptionsProps {
   movie: IMovie;
   setShowOptions: (arg: boolean) => void;
 }
 
-export const MovieOptions: FC<MovieOptionsProps> = ({
+interface IRenderOptions {
+  id: number;
+  view: string;
+  name: string;
+}
+
+interface IState {
+  isOptionsDropdown: boolean;
+  isModalOpened: boolean;
+  modalType: string;
+}
+
+interface IAction {
+  [key: string]: boolean | string;
+}
+
+export const MovieOptions = ({
   movie,
   setShowOptions,
-}) => {
+}: IMovieOptionsProps): ReactElement => {
   const initialState = {
     isOptionsDropdown: false,
     isModalOpened: false,
-    modalType: null,
+    modalType: '',
   };
 
-  const [state, dispatch] = useReducer((state, action) => {
-    return { ...state, ...action };
-  }, initialState);
+  const [state, dispatch] = useReducer(
+    (state: IState, action: IAction): IState => {
+      return { ...state, ...action };
+    },
+    initialState,
+  );
 
   const {
-    state: { selectMovie },
+    state: { selectedMovie },
     dispatch: appDispatch,
   } = useAppContext();
 
@@ -48,7 +67,7 @@ export const MovieOptions: FC<MovieOptionsProps> = ({
 
   const deleteMovie = (payload: IMovie) => {
     appDispatch(deleteAction(payload));
-    selectMovie?.id === payload.id && appDispatch(showMovieAction(null));
+    selectedMovie?.id === payload.id && appDispatch(showMovieAction(null));
   };
 
   const confirmDelete = () => {
@@ -57,17 +76,28 @@ export const MovieOptions: FC<MovieOptionsProps> = ({
   };
 
   const listOptions = [
-    { view: 'listItem', onClick: () => openModal('edit'), name: 'Edit' },
-    { view: 'listItem', onClick: () => openModal('delete'), name: 'Delete' },
+    { id: 1, view: 'listItem', onClick: () => openModal('edit'), name: 'Edit' },
+    {
+      id: 2,
+      view: 'listItem',
+      onClick: () => openModal('delete'),
+      name: 'Delete',
+    },
   ];
 
   const editMovieButtons = [
-    { view: 'secondary', type: 'reset', name: 'RESET', form: 'editMovie' },
-    { view: 'main', type: 'submit', name: 'SUBMIT', form: 'editMovie' },
+    {
+      id: 1,
+      view: 'secondary',
+      type: 'reset',
+      name: 'RESET',
+      form: 'editMovie',
+    },
+    { id: 2, view: 'main', type: 'submit', name: 'SUBMIT', form: 'editMovie' },
   ];
 
-  const renderOptions = ({ name, view, ...rest }) => (
-    <Button key={name} view={view} {...rest}>
+  const renderOptions = ({ name, view, id, ...rest }: IRenderOptions) => (
+    <Button key={id} view={view} {...rest}>
       {name}
     </Button>
   );

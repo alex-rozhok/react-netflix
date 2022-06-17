@@ -1,13 +1,13 @@
 import React, { FC, ReactElement, useEffect } from 'react';
 import styles from './style.module.less';
 import { Portal } from './Portal';
-import { Body, BodyProps } from './ModalBody';
-import { Footer, FooterProps } from './ModalFooter';
+import { Body, IBodyProps } from './ModalBody';
+import { Footer, IFooterProps } from './ModalFooter';
 import { Button } from '@components';
 
 type ModalFC<P = Record<string, unknown>> = React.FC<P> & {
-  Footer: React.FC<FooterProps>;
-  Body: React.FC<BodyProps>;
+  Footer: React.FC<IFooterProps>;
+  Body: React.FC<IBodyProps>;
 };
 
 export interface IModal {
@@ -18,9 +18,7 @@ export interface IModal {
 
 const ModalWrapper: FC<IModal> = ({ children, closeModal, isOpen }) => {
   useEffect((): (() => void) => {
-    isOpen
-      ? (document.body.style.overflow = 'hidden')
-      : (document.body.style.overflow = '');
+    if (isOpen) document.body.style.overflow = 'hidden';
     return () => (document.body.style.overflow = '');
   }, [isOpen]);
   return (

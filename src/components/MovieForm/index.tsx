@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, useReducer } from 'react';
+import React, { ChangeEvent, FormEvent, ReactElement, useReducer } from 'react';
 import styles from './style.module.less';
 import { CalendarIcon } from '@icons';
 import { Input, Label, Textarea } from '@common';
@@ -6,17 +6,22 @@ import { useAppContext } from '@hooks';
 import { changeMoviesDataAction, showMovieAction } from '@actions';
 import { IMovie } from '@types';
 
-interface MovieFormProps {
+interface IMovieFormProps {
   formId: string;
   movie?: IMovie;
   additionalSubmitHandler?: () => void;
 }
 
-export const MovieForm: FC<MovieFormProps> = ({
+type TStringAction = {
+  [key: string]: string;
+};
+type TFormAction = TStringAction | IMovie;
+
+export const MovieForm = ({
   formId,
   movie,
   additionalSubmitHandler = () => {},
-}) => {
+}: IMovieFormProps): ReactElement => {
   const initialState: IMovie = {
     id: new Date().getTime(),
     title: '',
@@ -30,18 +35,21 @@ export const MovieForm: FC<MovieFormProps> = ({
   };
 
   const {
-    state: { selectMovie },
+    state: { selectedMovie },
     dispatch: appDispatch,
   } = useAppContext();
 
   const stateData = movie || initialState;
-  const [state, dispatch] = useReducer((state: IMovie, action) => {
-    return { ...state, ...action };
-  }, stateData);
+  const [state, dispatch] = useReducer(
+    (state: IMovie, action: TStringAction | IMovie) => {
+      return { ...state, ...action };
+    },
+    stateData,
+  );
 
   const changeMoviesData = (payload: IMovie) => {
     appDispatch(changeMoviesDataAction(payload));
-    selectMovie?.id === payload.id && appDispatch(showMovieAction(payload));
+    selectedMovie?.id === payload.id && appDispatch(showMovieAction(payload));
   };
 
   const handlerSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -53,7 +61,9 @@ export const MovieForm: FC<MovieFormProps> = ({
   const handlerReset = () => {
     dispatch(stateData);
   };
-  const getValue = () => event.target.value;
+  const getValue = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => event.target.value;
   return (
     <form
       id={formId}
@@ -64,14 +74,14 @@ export const MovieForm: FC<MovieFormProps> = ({
       <Label label="TITLE">
         <Input
           value={state.title}
-          onChange={() => dispatch({ title: getValue() })}
+          onChange={(e) => dispatch({ title: getValue(e) })}
           placeholder="Title"
         />
       </Label>
       <Label label="RELEASE DATE">
         <Input
           value={state.release_date}
-          onChange={() => dispatch({ release_date: getValue() })}
+          onChange={(e) => dispatch({ release_date: getValue(e) })}
           placeholder="Select Date"
           icon={<CalendarIcon />}
         />
@@ -79,7 +89,7 @@ export const MovieForm: FC<MovieFormProps> = ({
       <Label label="MOVIE URL">
         <Input
           value={state.href}
-          onChange={() => dispatch({ href: getValue() })}
+          onChange={(e) => dispatch({ href: getValue(e) })}
           placeholder="https://"
         />
       </Label>
@@ -105,7 +115,7 @@ export const MovieForm: FC<MovieFormProps> = ({
         <Label label="OVERVIEW">
           <Textarea
             value={state.overview}
-            onChange={() => dispatch({ overview: getValue() })}
+            onChange={(e) => dispatch({ overview: getValue(e) })}
             placeholder="Movie description"
           />
         </Label>

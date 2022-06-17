@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { ReactElement, useCallback, useEffect, useRef } from 'react';
 import classNames from 'classnames/bind';
 import { Button } from '@components';
 import styles from './style.module.less';
@@ -6,7 +6,7 @@ import { changeGenresAction, filterMoviesAction } from '@actions';
 import { useAppContext } from '@hooks';
 import { IGenre } from '@types';
 
-export const FilterList = () => {
+export const FilterList = (): ReactElement => {
   const {
     state: { data, genres },
     dispatch,

@@ -20,5 +20,5 @@ export interface IAppState {
   movies: IMovie[];
   genres: IGenre[];
   sort: string;
-  selectMovie: IMovie | null;
+  selectedMovie: IMovie | null;
 }

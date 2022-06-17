@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 
-export const SearchIcon: FC = () => {
+export const SearchIcon = (): ReactElement => {
   return (
     <svg
       width="29"

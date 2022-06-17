@@ -1,7 +1,7 @@
 import React, { ChangeEventHandler, FC, ReactElement } from 'react';
 import styles from '../style.module.less';
 
-interface InputProps {
+interface IInputProps {
   type?: 'text' | 'number' | 'search' | 'search';
   value: string;
   placeholder?: string;
@@ -9,7 +9,7 @@ interface InputProps {
   onChange: ChangeEventHandler<HTMLInputElement>;
 }
 
-export const Input: FC<InputProps> = ({
+export const Input: FC<IInputProps> = ({
   type,
   value,
   onChange,
