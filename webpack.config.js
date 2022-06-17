@@ -46,21 +46,6 @@ const cssLoaders = (ext) => {
   return loaders;
 };
 
-const babelOptions = (preset) => {
-  const opts = {
-    presets: [
-      '@babel/preset-env',
-    ],
-    plugins: [
-      '@babel/plugin-proposal-class-properties',
-    ],
-  };
-  if (preset) {
-    opts.presets.push(preset);
-  }
-  return opts;
-};
-
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   mode: 'development',
@@ -72,12 +57,18 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      '@components': path.resolve(__dirname, 'src/components/'),
-      '@common': path.resolve(__dirname, 'src/components/common/'),
-      '@icons': path.resolve(__dirname, 'src/icons/'),
-      '@img': path.resolve(__dirname, 'src/img/'),
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@common': path.resolve(__dirname, 'src/components/common'),
+      '@icons': path.resolve(__dirname, 'src/icons'),
+      '@img': path.resolve(__dirname, 'src/img'),
+      '@context': path.resolve(__dirname, 'src/context'),
+      '@hooks': path.resolve(__dirname, 'src/hooks'),
+      '@reducer': path.resolve(__dirname, 'src/reducer'),
+      '@actions': path.resolve(__dirname, 'src/reducer/actions/'),
+      '@data': path.resolve(__dirname, 'src/data'),
+      '@types': path.resolve(__dirname, 'src/types'),
     },
   },
   optimization: optimization(),
@@ -102,6 +93,10 @@ module.exports = {
         {
           from: path.resolve(__dirname, 'src/favicon.ico'),
           to: path.resolve(__dirname, 'build'),
+        },
+        {
+          from: path.resolve(__dirname, 'src/img'),
+          to: path.resolve(__dirname, 'build/img'),
         }
       ],
     }),
@@ -138,27 +133,20 @@ module.exports = {
         }
       },
       {
-        test: /\.js$/,
+        test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: babelOptions(),
-        },
-      },
-      {
-        test: /\.ts$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: babelOptions('@babel/preset-typescript'),
-        },
-      },
-      {
-        test: /\.jsx$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: babelOptions('@babel/preset-react'),
+          options: {
+            presets: [
+              '@babel/preset-env',
+              '@babel/preset-react',
+              '@babel/preset-typescript'
+            ],
+            plugins: [
+              '@babel/plugin-proposal-class-properties',
+            ],
+          }
         },
       },
     ],
