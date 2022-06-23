@@ -11,7 +11,6 @@ export interface IMovie {
   revenue: number;
   genres: string[];
   runtime: number;
-  rating: number;
 }
 
 export interface IGenre {

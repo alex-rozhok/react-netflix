@@ -10,5 +10,5 @@ export const genres: IGenre[] = [
 
 export const sortItems: ISortItems[] = [
   { id: 1, value: 'release_date', name: 'RELEASE DATE' },
-  { id: 2, value: 'rating', name: 'RATING' },
+  { id: 2, value: 'vote_average', name: 'RATING' },
 ];

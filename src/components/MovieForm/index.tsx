@@ -33,7 +33,6 @@ export const MovieForm = ({
     revenue: 0,
     genres: [],
     runtime: 0,
-    rating: 0,
   };
 
   const { selectedMovie } = useMoviesState();
