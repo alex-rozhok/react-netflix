@@ -74,7 +74,7 @@ export const setMoviesAmount = (payload: number) => {
   return { type: CNST.TYPE.SET_MOVIES_AMOUNT, payload };
 };
 
-export const fetchMoviesAction = (offset = 0, amount = API.limit) => {
+export const fetchMoviesAction = (offset = 0, limit = API.limit) => {
   return async (dispatch: Dispatch, getState: () => IState) => {
     try {
       dispatch(showLoaderAction());
@@ -87,10 +87,10 @@ export const fetchMoviesAction = (offset = 0, amount = API.limit) => {
 
       const filter = genre === 'All' ? '' : `&filter=${genre}`;
       // eslint-disable-next-line max-len
-      const URL = `${API.baseUrl}?limit=${amount}&offset=${offset}&sortOrder=desc&sortBy=${sortBy}${filter}`;
+      const URL = `${API.baseUrl}?limit=${limit}&offset=${offset}&sortOrder=desc&sortBy=${sortBy}${filter}`;
       const response = await fetch(URL).then((result) => result.json());
       setTimeout(() => {
-        !offset && dispatch(setMoviesAmount(response.totalAmount));
+        dispatch(setMoviesAmount(response.totalAmount));
         dispatch(showMovies(response.data));
         dispatch(hideLoaderAction());
       }, 300);
@@ -113,8 +113,9 @@ export const deleteMovieAction = (id: number) => {
     } = getState();
 
     const updatedMovies = movies.filter((movie) => movie.id !== id);
-
-    dispatch(setMoviesAmount(totalMovies - 1));
+    if (totalMovies === movies.length) {
+      dispatch(setMoviesAmount(totalMovies - 1));
+    }
     dispatch(showMoviesAction(updatedMovies));
   };
 };
@@ -122,7 +123,7 @@ export const deleteMovieAction = (id: number) => {
 export const requestDeleteMovieAction = (id: number) => {
   return async (dispatch: Dispatch, getState: () => IState) => {
     const {
-      movies: { movies },
+      movies: { movies, totalMovies },
     } = getState();
     const { status } = await fetch(`${API.baseUrl}/${id}`, {
       method: 'DELETE',
@@ -130,7 +131,9 @@ export const requestDeleteMovieAction = (id: number) => {
 
     if (status >= 200 && status < 300) {
       dispatch(deleteMovieAction(id));
-      dispatch(fetchMoviesAction(movies.length - 1, 1));
+      if (totalMovies > movies.length) {
+        dispatch(fetchMoviesAction(movies.length - 1, 1));
+      }
       dispatch(
         showAlertAction(
           CNST.ALERT.TEXT.SUCCESS_MOVIE_DELETE,
