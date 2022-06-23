@@ -5,13 +5,13 @@ import { Body, IBodyProps } from './ModalBody';
 import { Footer, IFooterProps } from './ModalFooter';
 import { Button } from '@components';
 
-type ModalFC<P = Record<string, unknown>> = React.FC<P> & {
+type ModalFC<T> = React.FC<T> & {
   Footer: React.FC<IFooterProps>;
   Body: React.FC<IBodyProps>;
 };
 
 export interface IModal {
-  children: ReactElement[] | ReactElement;
+  children: ReactElement[];
   closeModal: () => void;
   isOpen: boolean;
 }

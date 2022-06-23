@@ -1,10 +1,9 @@
-import React, { FC } from 'react';
+import React from 'react';
 import './styles/style.less';
 import { Hero, Movies, Footer, FilterBar, ErrorBoundary } from '@components';
-import { AppContextProvider } from '@context';
 
-const App: FC = () => (
-  <AppContextProvider>
+const App = (): React.ReactElement => (
+  <>
     <Hero />
     <main className="main">
       <FilterBar />
@@ -13,7 +12,7 @@ const App: FC = () => (
       </ErrorBoundary>
     </main>
     <Footer />
-  </AppContextProvider>
+  </>
 );
 
 export default App;

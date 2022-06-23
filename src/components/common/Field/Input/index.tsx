@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FC, ReactElement } from 'react';
+import React, { ChangeEventHandler, ReactElement } from 'react';
 import styles from '../style.module.less';
 
 interface IInputProps {
@@ -9,13 +9,13 @@ interface IInputProps {
   onChange: ChangeEventHandler<HTMLInputElement>;
 }
 
-export const Input: FC<IInputProps> = ({
+export const Input = ({
   type,
   value,
   onChange,
   icon,
   ...attr
-}) => (
+}: IInputProps): ReactElement => (
   <div className={styles.field__wrapper}>
     <input
       type={type}

@@ -14,3 +14,5 @@ export { Button, Input, Textarea, Label } from './common';
 export { SelectedMovie } from './SelectedMovie';
 export { Poster } from './Poster';
 export { MovieGenres } from './MovieGenres';
+export { Loader } from './Loader';
+export { Alert } from './Alert';

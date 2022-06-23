@@ -2,27 +2,24 @@ import React, { ReactElement, useState } from 'react';
 import { Dropdown, Button } from '@components';
 import { CaretDownIcon } from '@icons';
 import styles from './style.module.less';
-import { useAppContext } from '@hooks';
-import { sortAction } from '@actions';
+import { useAction, useMoviesState } from '@hooks';
+import { sortItems } from '@data';
 
 export const Sort = (): ReactElement => {
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
   const toggleDropdown = () => setIsDropdownOpened(!isDropdownOpened);
   const closeDropdown = () => setIsDropdownOpened(false);
 
-  const {
-    state: { sort },
-    dispatch,
-  } = useAppContext();
+  const { sortBy } = useMoviesState();
+  const { sortAction, fetchMoviesAction } = useAction();
 
   const changeSort = (payload: string) => {
-    payload !== sort && dispatch(sortAction(payload));
+    if (payload !== sortBy) {
+      sortAction(payload);
+      fetchMoviesAction();
+    }
   };
 
-  const sortItems = [
-    { id: 1, value: 'release_date', name: 'RELEASE DATE' },
-    { id: 2, value: 'title', name: 'NAME' },
-  ];
   const changeHandler = (value: string) => {
     changeSort(value);
     closeDropdown();
@@ -33,7 +30,7 @@ export const Sort = (): ReactElement => {
       <p className={styles.sort__by}>SORT BY</p>
       <Dropdown isShow={isDropdownOpened} closeDropdown={closeDropdown}>
         <Dropdown.Button view="filter" onClick={toggleDropdown}>
-          {sortItems.find((el) => el.value === sort)?.name}
+          {sortItems.find((el) => el.value === sortBy)?.name}
           <span className={styles.sort__toggle_icon}>
             <CaretDownIcon />
           </span>

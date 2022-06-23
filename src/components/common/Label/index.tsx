@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import styles from './style.module.less';
 
 export interface ILabelProps {
@@ -6,7 +6,7 @@ export interface ILabelProps {
   label: string;
 }
 
-export const Label: FC<ILabelProps> = ({ children, label }) => (
+export const Label = ({ children, label }: ILabelProps): ReactElement => (
   <label className={styles.label}>
     {label}
     <div className={styles.label__field}>{children}</div>

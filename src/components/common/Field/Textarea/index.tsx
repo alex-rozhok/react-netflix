@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FC } from 'react';
+import React, { ChangeEventHandler, ReactElement } from 'react';
 import styles from '../style.module.less';
 
 interface ITextAreaProps {
@@ -7,7 +7,11 @@ interface ITextAreaProps {
   onChange: ChangeEventHandler<HTMLTextAreaElement>;
 }
 
-export const Textarea: FC<ITextAreaProps> = ({ value, onChange, ...attr }) => (
+export const Textarea = ({
+  value,
+  onChange,
+  ...attr
+}: ITextAreaProps): ReactElement => (
   <div className={styles.field__wrapper}>
     <textarea
       className={styles.field__textarea}

@@ -11,7 +11,7 @@
     "outDir": "build",
     "baseUrl": "src",
     "paths": {
-      "@actions": ["reducer/actions"],
+      "@actions": ["redux/actions"],
       "@common": ["components/common/"],
       "@*": ["*/"]
     }

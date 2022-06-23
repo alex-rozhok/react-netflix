@@ -1,43 +1,35 @@
-import React, { ReactElement, useCallback, useEffect, useRef } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import { Button } from '@components';
 import styles from './style.module.less';
-import { changeGenresAction, filterMoviesAction } from '@actions';
-import { useAppContext } from '@hooks';
-import { IGenre } from '@types';
+import { useAction, useMoviesState } from '@hooks';
+import { genres } from '@data';
 
 export const FilterList = (): ReactElement => {
-  const {
-    state: { data, genres },
-    dispatch,
-  } = useAppContext();
-  const currentFilter = useRef('All');
+  const { changeGenresAction, fetchMoviesAction } = useAction();
+  const { genre } = useMoviesState();
 
-  const filterMovies = useCallback(
-    (selectedGenre: string) => {
-      dispatch(filterMoviesAction(selectedGenre));
-    },
-    [data],
-  );
+  const genresTab = useMemo(() => {
+    return [...genres].map((item) =>
+      item.name === genre
+        ? { ...item, active: true }
+        : { ...item, active: false },
+    );
+  }, [genre]);
 
   const changeFilter = (clickedGenre: string) => {
-    if (currentFilter.current !== clickedGenre) {
-      currentFilter.current = clickedGenre;
-      dispatch(changeGenresAction(clickedGenre));
-      filterMovies(clickedGenre);
+    if (clickedGenre !== genre) {
+      changeGenresAction(clickedGenre);
+      fetchMoviesAction();
     }
   };
 
-  useEffect(() => {
-    filterMovies(currentFilter.current);
-  }, [filterMovies]);
-
   return (
     <ul className="row">
-      {genres.map((genre: IGenre) => {
+      {genresTab.map((genre) => {
         return (
           <li
-            key={genre.name}
+            key={genre.id}
             className={classNames(
               styles.filter__item,
               genre.active && styles.active,

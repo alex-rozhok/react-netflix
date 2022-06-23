@@ -1,31 +1,55 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from './style.module.less';
 import { MovieItem } from './MovieItem';
-import { useAppContext } from '@hooks';
+import { useAction, useAppState, useMoviesState } from '@hooks';
+import { Loader, Alert, Button } from '@components';
 
 export const Movies = (): ReactElement => {
-  const {
-    state: { movies, sort },
-  } = useAppContext();
-  const movieCount = movies.length;
+  const { movies, totalMovies } = useMoviesState();
+  const { loading, alert } = useAppState();
 
-  const sortedMovies = [...movies].sort((a, b) => {
-    return a[sort].localeCompare(b[sort]);
-  });
+  const { fetchMoviesAction } = useAction();
+
+  useEffect(() => {
+    fetchMoviesAction();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const loadMore = () => {
+    fetchMoviesAction(movies.length);
+  };
 
   return (
     <section className={classNames(styles.movie, 'container')}>
-      <p className={styles.movie__count}>
-        <strong>{movieCount}</strong> {movieCount !== 1 ? 'movies ' : 'movie '}
-        found
-      </p>
-      {movieCount > 0 && (
-        <ul className={styles.movie__list}>
-          {sortedMovies.map((movie) => (
-            <MovieItem key={movie.id} movie={movie} />
-          ))}
-        </ul>
+      {alert.text && <Alert />}
+
+      {loading && !totalMovies ? (
+        <Loader />
+      ) : (
+        <>
+          <p className={styles.movie__count}>
+            <strong>{totalMovies}</strong>
+            {totalMovies !== 1 ? ' movies ' : ' movie '}
+            found
+          </p>
+          <ul className={styles.movie__list}>
+            {movies?.map((movie) => (
+              <MovieItem key={movie.id} movie={movie} />
+            ))}
+          </ul>
+        </>
+      )}
+      {loading && totalMovies ? (
+        <Loader />
+      ) : (
+        totalMovies > movies.length && (
+          <div className="text-center">
+            <Button onClick={loadMore} view="main">
+              Load More
+            </Button>
+          </div>
+        )
       )}
     </section>
   );

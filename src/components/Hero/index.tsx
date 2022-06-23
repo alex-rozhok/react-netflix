@@ -1,12 +1,9 @@
 import React, { ReactElement } from 'react';
-import { useAppContext } from '@hooks';
 import { Movie } from './Movie';
 import { Home } from './Home';
+import { useMoviesState } from '@hooks';
 
 export const Hero = (): ReactElement => {
-  const {
-    state: { selectedMovie },
-  } = useAppContext();
-
+  const { selectedMovie } = useMoviesState();
   return <>{selectedMovie ? <Movie /> : <Home />}</>;
 };

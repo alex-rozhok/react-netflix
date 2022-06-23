@@ -2,9 +2,8 @@ import React, { ChangeEvent, FormEvent, ReactElement, useReducer } from 'react';
 import styles from './style.module.less';
 import { CalendarIcon } from '@icons';
 import { Input, Label, Textarea } from '@common';
-import { useAppContext } from '@hooks';
-import { changeMoviesDataAction, showMovieAction } from '@actions';
-import { IMovie } from '@types';
+import { IMovie } from '@interfaces';
+import { useAction, useMoviesState } from '@hooks';
 
 interface IMovieFormProps {
   formId: string;
@@ -15,7 +14,6 @@ interface IMovieFormProps {
 type TStringAction = {
   [key: string]: string;
 };
-type TFormAction = TStringAction | IMovie;
 
 export const MovieForm = ({
   formId,
@@ -25,19 +23,21 @@ export const MovieForm = ({
   const initialState: IMovie = {
     id: new Date().getTime(),
     title: '',
-    genres: [],
+    tagline: '',
+    vote_average: 0,
+    vote_count: 0,
     release_date: '',
     poster_path: '',
-    href: '',
     overview: '',
-    rating: '',
-    runtime: '',
+    budget: 0,
+    revenue: 0,
+    genres: [],
+    runtime: 0,
+    rating: 0,
   };
 
-  const {
-    state: { selectedMovie },
-    dispatch: appDispatch,
-  } = useAppContext();
+  const { selectedMovie } = useMoviesState();
+  const { changeMoviesDataAction, selectMovieAction } = useAction();
 
   const stateData = movie || initialState;
   const [state, dispatch] = useReducer(
@@ -48,8 +48,8 @@ export const MovieForm = ({
   );
 
   const changeMoviesData = (payload: IMovie) => {
-    appDispatch(changeMoviesDataAction(payload));
-    selectedMovie?.id === payload.id && appDispatch(showMovieAction(payload));
+    changeMoviesDataAction(payload);
+    selectedMovie?.id === payload.id && selectMovieAction(payload);
   };
 
   const handlerSubmit = (e: FormEvent<HTMLFormElement>) => {
