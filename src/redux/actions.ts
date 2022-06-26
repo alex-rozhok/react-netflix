@@ -1,5 +1,5 @@
 import { TAlertStatus, IMovie, IState } from '@interfaces';
-import { Dispatch } from 'redux';
+import { ThunkAction } from 'redux-thunk';
 import * as Types from './types';
 
 const API = {
@@ -65,8 +65,6 @@ type setMoviesAmountActionType = {
   count: number;
 };
 
-type TGetState = () => IState;
-
 const hideAlert = (): hideAlertType => ({
   type: Types.ALERT_HIDE,
 });
@@ -77,8 +75,11 @@ const showAlert = (text: string, status: TAlertStatus): showAlertType => ({
   status,
 });
 
-export const showAlertAction = (text: string, status: TAlertStatus) => {
-  return (dispatch: Dispatch<showAlertType | hideAlertType>) => {
+export const showAlertAction = (
+  text: string,
+  status: TAlertStatus,
+): ThunkAction<void, IState, unknown, hideAlertType | showAlertType> => {
+  return (dispatch) => {
     dispatch(showAlert(text, status));
     setTimeout(() => {
       dispatch(hideAlert());
@@ -120,8 +121,10 @@ export const setMoviesAmountAction = (
   return { type: Types.SET_MOVIES_AMOUNT, count };
 };
 
-export const showMoreMoviesAction = (data: IMovie[]) => {
-  return (dispatch: Dispatch<showMoviesActionType>, getState: TGetState) => {
+export const showMoreMoviesAction = (
+  data: IMovie[],
+): ThunkAction<void, IState, unknown, showMoviesActionType> => {
+  return (dispatch, getState) => {
     const {
       movies: { movies },
     } = getState();
@@ -130,8 +133,11 @@ export const showMoreMoviesAction = (data: IMovie[]) => {
   };
 };
 
-export const fetchMoviesAction = (offset = 0, limit = API.limit) => {
-  return async (dispatch: Dispatch<TActions>, getState: TGetState) => {
+export const fetchMoviesAction = (
+  offset = 0,
+  limit = API.limit,
+): ThunkAction<void, IState, unknown, TActions> => {
+  return async (dispatch, getState) => {
     try {
       dispatch(showLoaderAction());
       !offset && dispatch(setMoviesAmountAction(0));
@@ -157,8 +163,10 @@ export const fetchMoviesAction = (offset = 0, limit = API.limit) => {
   };
 };
 
-export const deleteMovieAction = (id: number) => {
-  return (dispatch: Dispatch<TActions>, getState: TGetState) => {
+export const deleteMovieAction = (
+  id: number,
+): ThunkAction<void, IState, unknown, TActions> => {
+  return (dispatch, getState) => {
     const {
       movies: { movies, totalMovies },
     } = getState();
@@ -171,8 +179,10 @@ export const deleteMovieAction = (id: number) => {
   };
 };
 
-export const requestDeleteMovieAction = (id: number) => {
-  return async (dispatch: Dispatch<TActions>, getState: TGetState) => {
+export const requestDeleteMovieAction = (
+  id: number,
+): ThunkAction<void, IState, unknown, TActions> => {
+  return async (dispatch, getState) => {
     const {
       movies: { movies, totalMovies },
     } = getState();
