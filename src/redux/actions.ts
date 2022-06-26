@@ -1,67 +1,127 @@
-import { IMovie, IState } from '@interfaces';
+import { TAlertStatus, IMovie, IState } from '@interfaces';
 import { Dispatch } from 'redux';
-import CNST from '@constants';
+import * as Types from './types';
 
 const API = {
   baseUrl: 'http://localhost:4000/movies',
   limit: 9,
 };
 
-export const hideAlertAction = () => {
-  return {
-    type: CNST.TYPE.ALERT.HIDE,
-  };
+const ALERT: Record<string, TAlertStatus> = {
+  success: 'success',
+  error: 'error',
 };
 
-export const showAlertAction = (text: string, status: string) => {
-  return (dispatch: Dispatch) => {
-    dispatch({
-      type: CNST.TYPE.ALERT.SHOW,
-      payload: { text, status },
-    });
+export type TActions =
+  | selectMovieActionType
+  | changeGenresActionType
+  | sortActionType
+  | showMoviesActionType
+  | setMoviesAmountActionType
+  | hideAlertType
+  | showAlertType
+  | showLoaderActionType
+  | hideLoaderActionType;
+
+type hideAlertType = {
+  type: typeof Types.ALERT_HIDE;
+};
+
+type showAlertType = {
+  type: typeof Types.ALERT_SHOW;
+  text: string;
+  status: TAlertStatus;
+};
+type showLoaderActionType = {
+  type: typeof Types.LOADER_SHOW;
+};
+
+type hideLoaderActionType = {
+  type: typeof Types.LOADER_HIDE;
+};
+
+type selectMovieActionType = {
+  type: typeof Types.SELECT_MOVIE;
+  movie?: IMovie;
+};
+
+type changeGenresActionType = {
+  type: typeof Types.CHANGE_GENRE;
+  genre: string;
+};
+
+type sortActionType = {
+  type: typeof Types.CHANGE_SORT;
+  sortBy: string;
+};
+
+type showMoviesActionType = {
+  type: typeof Types.SHOW_MOVIES;
+  movies: IMovie[];
+};
+
+type setMoviesAmountActionType = {
+  type: typeof Types.SET_MOVIES_AMOUNT;
+  count: number;
+};
+
+type TGetState = () => IState;
+
+const hideAlert = (): hideAlertType => ({
+  type: Types.ALERT_HIDE,
+});
+
+const showAlert = (text: string, status: TAlertStatus): showAlertType => ({
+  type: Types.ALERT_SHOW,
+  text,
+  status,
+});
+
+export const showAlertAction = (text: string, status: TAlertStatus) => {
+  return (dispatch: Dispatch<showAlertType | hideAlertType>) => {
+    dispatch(showAlert(text, status));
     setTimeout(() => {
-      dispatch(hideAlertAction());
+      dispatch(hideAlert());
     }, 2000);
   };
 };
 
-export const showLoaderAction = () => {
-  return { type: CNST.TYPE.LOADER.SHOW };
-};
-export const hideLoaderAction = () => {
-  return { type: CNST.TYPE.LOADER.HIDE };
-};
+export const showLoaderAction = (): showLoaderActionType => ({
+  type: Types.LOADER_SHOW,
+});
 
-export const selectMovieAction = (movie?: IMovie) => {
-  return {
-    type: CNST.TYPE.SELECT_MOVIE,
-    payload: movie,
-  };
-};
+export const hideLoaderAction = (): hideLoaderActionType => ({
+  type: Types.LOADER_HIDE,
+});
 
-export const changeGenresAction = (payload: string) => {
-  return {
-    type: CNST.TYPE.CHANGE_GENRE,
-    payload,
-  };
-};
+export const selectMovieAction = (movie?: IMovie): selectMovieActionType => ({
+  type: Types.SELECT_MOVIE,
+  movie,
+});
 
-export const sortAction = (sortBy: string) => {
-  return {
-    type: CNST.TYPE.CHANGE_SORT,
-    payload: sortBy,
-  };
-};
+export const changeGenresAction = (genre: string): changeGenresActionType => ({
+  type: Types.CHANGE_GENRE,
+  genre,
+});
 
-export const showMoviesAction = (movies: IMovie[]) => {
-  return {
-    type: CNST.TYPE.SHOW_MOVIES,
-    payload: movies,
-  };
+export const sortAction = (sortBy: string): sortActionType => ({
+  type: Types.CHANGE_SORT,
+  sortBy,
+});
+
+export const showMoviesAction = (movies: IMovie[]): showMoviesActionType => ({
+  type: Types.SHOW_MOVIES,
+  movies,
+});
+
+export const setMoviesAmountAction = (
+  count: number,
+): setMoviesAmountActionType => {
+  return { type: Types.SET_MOVIES_AMOUNT, count };
 };
 
 export const showMoreMoviesAction = (data: IMovie[]) => {
-  return (dispatch: Dispatch, getState: () => IState) => {
+  return (dispatch: Dispatch<showMoviesActionType>, getState: TGetState) => {
     const {
       movies: { movies },
     } = getState();
@@ -70,15 +130,11 @@ export const showMoreMoviesAction = (data: IMovie[]) => {
   };
 };
 
-export const setMoviesAmount = (payload: number) => {
-  return { type: CNST.TYPE.SET_MOVIES_AMOUNT, payload };
-};
-
 export const fetchMoviesAction = (offset = 0, limit = API.limit) => {
-  return async (dispatch: Dispatch, getState: () => IState) => {
+  return async (dispatch: Dispatch<TActions>, getState: TGetState) => {
     try {
       dispatch(showLoaderAction());
-      !offset && dispatch(setMoviesAmount(0));
+      !offset && dispatch(setMoviesAmountAction(0));
 
       const showMovies = offset ? showMoreMoviesAction : showMoviesAction;
       const {
@@ -90,38 +146,33 @@ export const fetchMoviesAction = (offset = 0, limit = API.limit) => {
       const URL = `${API.baseUrl}?limit=${limit}&offset=${offset}&sortOrder=desc&sortBy=${sortBy}${filter}`;
       const response = await fetch(URL).then((result) => result.json());
       setTimeout(() => {
-        dispatch(setMoviesAmount(response.totalAmount));
+        dispatch(setMoviesAmountAction(response.totalAmount));
         dispatch(showMovies(response.data));
         dispatch(hideLoaderAction());
       }, 300);
     } catch (e) {
       dispatch(hideLoaderAction());
-      dispatch(
-        showAlertAction(
-          CNST.ALERT.TEXT.FAILED_MOVIES_REQUEST,
-          CNST.ALERT.STATUS.ERROR,
-        ),
-      );
+      dispatch(showAlertAction('Failed to get movie list', ALERT.error));
     }
   };
 };
 
 export const deleteMovieAction = (id: number) => {
-  return (dispatch: Dispatch, getState: () => IState) => {
+  return (dispatch: Dispatch<TActions>, getState: TGetState) => {
     const {
       movies: { movies, totalMovies },
     } = getState();
 
     const updatedMovies = movies.filter((movie) => movie.id !== id);
     if (totalMovies === movies.length) {
-      dispatch(setMoviesAmount(totalMovies - 1));
+      dispatch(setMoviesAmountAction(totalMovies - 1));
     }
     dispatch(showMoviesAction(updatedMovies));
   };
 };
 
 export const requestDeleteMovieAction = (id: number) => {
-  return async (dispatch: Dispatch, getState: () => IState) => {
+  return async (dispatch: Dispatch<TActions>, getState: TGetState) => {
     const {
       movies: { movies, totalMovies },
     } = getState();
@@ -135,18 +186,10 @@ export const requestDeleteMovieAction = (id: number) => {
         dispatch(fetchMoviesAction(movies.length - 1, 1));
       }
       dispatch(
-        showAlertAction(
-          CNST.ALERT.TEXT.SUCCESS_MOVIE_DELETE,
-          CNST.ALERT.STATUS.SUCCESS,
-        ),
+        showAlertAction('Movie has been deleted successfully', ALERT.success),
       );
     } else {
-      dispatch(
-        showAlertAction(
-          CNST.ALERT.TEXT.FAILED_MOVIE_DELETE,
-          CNST.ALERT.STATUS.ERROR,
-        ),
-      );
+      dispatch(showAlertAction('Failed to delete movie', ALERT.error));
     }
   };
 };

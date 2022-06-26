@@ -1,6 +1,7 @@
 /* eslint-disable no-case-declarations */
-import { IMovie, IMoviesState } from '@interfaces';
-import CNST from '@constants';
+import { IMoviesState } from '@interfaces';
+import * as Types from './types';
+import { TActions } from '@actions';
 
 const initialState: IMoviesState = {
   movies: [],
@@ -11,19 +12,19 @@ const initialState: IMoviesState = {
 
 export const moviesReducer = (
   state = initialState,
-  { type, payload },
+  action: TActions,
 ): IMoviesState => {
-  switch (type) {
-    case CNST.TYPE.CHANGE_GENRE:
-      return { ...state, genre: payload };
-    case CNST.TYPE.CHANGE_SORT:
-      return { ...state, sortBy: payload };
-    case CNST.TYPE.SELECT_MOVIE:
-      return { ...state, selectedMovie: payload };
-    case CNST.TYPE.SET_MOVIES_AMOUNT:
-      return { ...state, totalMovies: payload };
-    case CNST.TYPE.SHOW_MOVIES:
-      return { ...state, movies: payload };
+  switch (action.type) {
+    case Types.CHANGE_GENRE:
+      return { ...state, genre: action.genre };
+    case Types.CHANGE_SORT:
+      return { ...state, sortBy: action.sortBy };
+    case Types.SELECT_MOVIE:
+      return { ...state, selectedMovie: action.movie };
+    case Types.SET_MOVIES_AMOUNT:
+      return { ...state, totalMovies: action.count };
+    case Types.SHOW_MOVIES:
+      return { ...state, movies: action.movies };
     default:
       return state;
   }

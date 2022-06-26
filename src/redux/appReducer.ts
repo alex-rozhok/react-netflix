@@ -1,5 +1,6 @@
-import CNST from '@constants';
+import { TActions } from '@actions';
 import { IAppState } from 'interfaces';
+import * as Types from './types';
 
 const initialState: IAppState = {
   loading: false,
@@ -10,19 +11,19 @@ const initialState: IAppState = {
 };
 export const appReducer = (
   state = initialState,
-  { type, payload },
+  action: TActions,
 ): IAppState => {
-  switch (type) {
-    case CNST.TYPE.LOADER.SHOW:
+  switch (action.type) {
+    case Types.LOADER_SHOW:
       return { ...state, loading: true };
-    case CNST.TYPE.LOADER.HIDE:
+    case Types.LOADER_HIDE:
       return { ...state, loading: false };
-    case CNST.TYPE.ALERT.SHOW:
+    case Types.ALERT_SHOW:
       return {
         ...state,
-        alert: { text: payload.text, status: payload.status },
+        alert: { text: action.text, status: action.status },
       };
-    case CNST.TYPE.ALERT.HIDE:
+    case Types.ALERT_HIDE:
       return { ...state, alert: { text: '', status: '' } };
     default:
       return state;

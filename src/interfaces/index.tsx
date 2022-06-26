@@ -33,9 +33,10 @@ export interface IMoviesState {
   totalMovies: number;
 }
 
+export type TAlertStatus = 'success' | 'error' | '';
 export interface IAlert {
   text: string;
-  status: 'success' | 'error' | '';
+  status: TAlertStatus;
 }
 
 export interface IAppState {
