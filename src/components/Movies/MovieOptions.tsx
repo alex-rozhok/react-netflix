@@ -33,7 +33,7 @@ export const MovieOptions = ({
   };
 
   const [state, dispatch] = useReducer(
-    (state: IState, action: Record<string, boolean | string>): IState => {
+    (state: IState, action: Partial<IState>): IState => {
       return { ...state, ...action };
     },
     initialState,

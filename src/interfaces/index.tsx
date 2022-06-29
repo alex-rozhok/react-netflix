@@ -15,7 +15,8 @@ export interface IMovie {
 
 export interface IGenre {
   id: number;
-  name: string;
+  label: string;
+  value: string;
   active: boolean;
 }
 

@@ -11,7 +11,7 @@ export const FilterList = (): ReactElement => {
 
   const genresTab = useMemo(() => {
     return [...genres].map((item) =>
-      item.name === genre
+      item.label === genre
         ? { ...item, active: true }
         : { ...item, active: false },
     );
@@ -38,10 +38,10 @@ export const FilterList = (): ReactElement => {
             <Button
               view="filter"
               onClick={() => {
-                changeFilter(genre.name);
+                changeFilter(genre.label);
               }}
             >
-              {genre.name}
+              {genre.label}
             </Button>
           </li>
         );

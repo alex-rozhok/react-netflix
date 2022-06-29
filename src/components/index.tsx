@@ -10,7 +10,7 @@ export { Sort } from './Sort';
 export { Dropdown } from './Dropdown';
 export { MovieForm } from './MovieForm';
 export { ErrorBoundary } from './ErrorBoundary';
-export { Button, Input, Textarea, Label } from './common';
+export { Button, Input, Textarea, Label, Select } from './common';
 export { SelectedMovie } from './SelectedMovie';
 export { Poster } from './Poster';
 export { MovieGenres } from './MovieGenres';

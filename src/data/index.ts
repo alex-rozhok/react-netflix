@@ -1,11 +1,11 @@
 import { IGenre, ISortItems } from '@interfaces';
 
 export const genres: IGenre[] = [
-  { id: 1, name: 'All', active: true },
-  { id: 2, name: 'Documentary', active: false },
-  { id: 3, name: 'Comedy', active: false },
-  { id: 4, name: 'Horror', active: false },
-  { id: 5, name: 'Crime', active: false },
+  { id: 1, label: 'All', value: 'all', active: true },
+  { id: 2, label: 'Documentary', value: 'documentary', active: false },
+  { id: 3, label: 'Comedy', value: 'comedy', active: false },
+  { id: 4, label: 'Horror', value: 'horror', active: false },
+  { id: 5, label: 'Crime', value: 'crime', active: false },
 ];
 
 export const sortItems: ISortItems[] = [

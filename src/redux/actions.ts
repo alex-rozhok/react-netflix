@@ -21,7 +21,8 @@ export type TActions =
   | hideAlertType
   | showAlertType
   | showLoaderActionType
-  | hideLoaderActionType;
+  | hideLoaderActionType
+  | changeMoviesDataActionType;
 
 type hideAlertType = {
   type: typeof Types.ALERT_HIDE;
@@ -63,6 +64,20 @@ type showMoviesActionType = {
 type setMoviesAmountActionType = {
   type: typeof Types.SET_MOVIES_AMOUNT;
   count: number;
+};
+
+type changeMoviesDataActionType = {
+  type: typeof Types.CHANGE_MOVIES_DATA;
+  movie: IMovie;
+};
+
+export const changeMoviesDataAction = (
+  movie: IMovie,
+): changeMoviesDataActionType => {
+  return {
+    type: Types.CHANGE_MOVIES_DATA,
+    movie,
+  };
 };
 
 const hideAlert = (): hideAlertType => ({

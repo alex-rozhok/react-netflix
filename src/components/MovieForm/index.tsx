@@ -1,19 +1,16 @@
 import React, { ChangeEvent, FormEvent, ReactElement, useReducer } from 'react';
 import styles from './style.module.less';
 import { CalendarIcon } from '@icons';
-import { Input, Label, Textarea } from '@common';
+import { Input, Label, Select, Textarea } from '@common';
 import { IMovie } from '@interfaces';
 import { useAction, useMoviesState } from '@hooks';
+import { genres } from '@data';
 
 interface IMovieFormProps {
   formId: string;
   movie?: IMovie;
   additionalSubmitHandler?: () => void;
 }
-
-type TStringAction = {
-  [key: string]: string;
-};
 
 export const MovieForm = ({
   formId,
@@ -40,7 +37,7 @@ export const MovieForm = ({
 
   const stateData = movie || initialState;
   const [state, dispatch] = useReducer(
-    (state: IMovie, action: TStringAction | IMovie) => {
+    (state: IMovie, action: Partial<IMovie>): IMovie => {
       return { ...state, ...action };
     },
     stateData,
@@ -63,6 +60,13 @@ export const MovieForm = ({
   const getValue = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => event.target.value;
+
+  const options = genres.filter((genre) => genre.label !== 'All');
+
+  const selectChangeHandler = (newValue: any) => {
+    dispatch({ genres: newValue.map((value: any) => value.label) });
+  };
+
   return (
     <form
       id={formId}
@@ -72,6 +76,7 @@ export const MovieForm = ({
     >
       <Label label="TITLE">
         <Input
+          type="text"
           value={state.title}
           onChange={(e) => dispatch({ title: getValue(e) })}
           placeholder="Title"
@@ -79,6 +84,7 @@ export const MovieForm = ({
       </Label>
       <Label label="RELEASE DATE">
         <Input
+          type="text"
           value={state.release_date}
           onChange={(e) => dispatch({ release_date: getValue(e) })}
           placeholder="Select Date"
@@ -87,25 +93,35 @@ export const MovieForm = ({
       </Label>
       <Label label="MOVIE URL">
         <Input
-          value={state.href}
-          onChange={(e) => dispatch({ href: getValue(e) })}
+          type="text"
+          value={state.poster_path}
+          onChange={(e) => dispatch({ poster_path: getValue(e) })}
           placeholder="https://"
         />
       </Label>
       <Label label="RATING">
-        <Input value="" onChange={() => {}} placeholder="9.9" type="number" />
+        <Input
+          value={state.vote_average}
+          onChange={(e) => dispatch({ vote_average: +getValue(e) })}
+          placeholder="9.9"
+          type="number"
+          max="10"
+          min="0"
+          step="0.1"
+        />
       </Label>
       <Label label="GENRE">
-        <Input
-          value={state.genres.join(', ')}
-          onChange={() => {}}
+        <Select
+          options={options}
+          value={state.genres}
+          onChange={selectChangeHandler}
           placeholder="Select Genre"
         />
       </Label>
       <Label label="RUNTIME">
         <Input
-          value=""
-          onChange={() => {}}
+          value={state.runtime}
+          onChange={(e) => dispatch({ runtime: +getValue(e) })}
           placeholder="Minutes"
           type="number"
         />
