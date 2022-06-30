@@ -64,7 +64,6 @@ module.exports = {
       '@icons': path.resolve(__dirname, 'src/icons'),
       '@img': path.resolve(__dirname, 'src/img'),
       '@hooks': path.resolve(__dirname, 'src/hooks'),
-      '@reducer': path.resolve(__dirname, 'src/reducer'),
       '@redux': path.resolve(__dirname, 'src/redux/'),
       '@actions': path.resolve(__dirname, 'src/redux/actions/'),
       '@data': path.resolve(__dirname, 'src/data'),

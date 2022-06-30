@@ -3,7 +3,7 @@ import styles from './style.module.less';
 import { Body, IBodyProps } from './DropdownBody';
 import { Button } from '@common';
 import { DropdownProvider } from './DropdownContext';
-import { IButtonProps } from 'components/common/Button';
+import { IButtonProps } from '@common/Button';
 
 export type DropdownFC<T> = React.FC<T> & {
   Button: React.FC<IButtonProps>;

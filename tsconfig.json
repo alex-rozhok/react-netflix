@@ -13,6 +13,7 @@
     "paths": {
       "@actions": ["redux/actions"],
       "@common": ["components/common/"],
+      "@common/*": ["components/common/*"],
       "@*": ["*/"]
     }
   }

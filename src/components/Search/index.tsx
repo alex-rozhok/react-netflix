@@ -12,6 +12,7 @@ export const Search = (): ReactElement => {
       <h1 className={styles.search__title}>FIND YOUR MOVIE</h1>
       <div className={styles.search__row}>
         <Input
+          type="text"
           placeholder="What do you want to watch?"
           value={value}
           onChange={(e) => setValue(e.target.value)}

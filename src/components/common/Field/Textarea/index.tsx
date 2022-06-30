@@ -5,6 +5,7 @@ interface ITextAreaProps {
   value: string;
   placeholder?: string;
   onChange: ChangeEventHandler<HTMLTextAreaElement>;
+  [key: string]: any;
 }
 
 export const Textarea = ({

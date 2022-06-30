@@ -1,11 +1,10 @@
 import React, { ChangeEvent, FormEvent, ReactElement, useReducer } from 'react';
 import styles from './style.module.less';
 import { CalendarIcon } from '@icons';
-import { Input, Label, Select, Textarea } from '@common';
+import { Input, Label, Select, Textarea, DatePicker } from '@components';
 import { IMovie } from '@interfaces';
 import { useAction, useMoviesState } from '@hooks';
 import { genres } from '@data';
-
 interface IMovieFormProps {
   formId: string;
   movie?: IMovie;
@@ -18,7 +17,7 @@ export const MovieForm = ({
   additionalSubmitHandler = () => {},
 }: IMovieFormProps): ReactElement => {
   const initialState: IMovie = {
-    id: new Date().getTime(),
+    id: Date.now(),
     title: '',
     tagline: '',
     vote_average: 0,
@@ -74,33 +73,41 @@ export const MovieForm = ({
       onReset={handlerReset}
       className={styles.form}
     >
-      <Label label="TITLE">
+      <Label target="movie-title">
+        TITLE
         <Input
+          id="movie-title"
           type="text"
           value={state.title}
           onChange={(e) => dispatch({ title: getValue(e) })}
           placeholder="Title"
         />
       </Label>
-      <Label label="RELEASE DATE">
-        <Input
-          type="text"
-          value={state.release_date}
-          onChange={(e) => dispatch({ release_date: getValue(e) })}
-          placeholder="Select Date"
+      <Label target="movie-date">
+        RELEASE DATE
+        <DatePicker
+          date={state.release_date}
+          changeDate={(date) => {
+            dispatch({ release_date: date });
+          }}
           icon={<CalendarIcon />}
+          id="movie-date"
         />
       </Label>
-      <Label label="MOVIE URL">
+      <Label target="movie-poster">
+        MOVIE URL
         <Input
+          id="movie-poster"
           type="text"
           value={state.poster_path}
           onChange={(e) => dispatch({ poster_path: getValue(e) })}
           placeholder="https://"
         />
       </Label>
-      <Label label="RATING">
+      <Label target="movie-rating">
+        RATING
         <Input
+          id="movie-rating"
           value={state.vote_average}
           onChange={(e) => dispatch({ vote_average: +getValue(e) })}
           placeholder="9.9"
@@ -110,16 +117,20 @@ export const MovieForm = ({
           step="0.1"
         />
       </Label>
-      <Label label="GENRE">
+      <Label target="movie-genres">
+        GENRE
         <Select
+          id="movie-genres"
           options={options}
           value={state.genres}
           onChange={selectChangeHandler}
           placeholder="Select Genre"
         />
       </Label>
-      <Label label="RUNTIME">
+      <Label target="movie-rutime">
+        RUNTIME
         <Input
+          id="movie-rutime"
           value={state.runtime}
           onChange={(e) => dispatch({ runtime: +getValue(e) })}
           placeholder="Minutes"
@@ -127,8 +138,10 @@ export const MovieForm = ({
         />
       </Label>
       <div className={styles.form__full_field}>
-        <Label label="OVERVIEW">
+        <Label target="movie-overview">
+          OVERVIEW
           <Textarea
+            id="movie-overview"
             value={state.overview}
             onChange={(e) => dispatch({ overview: getValue(e) })}
             placeholder="Movie description"

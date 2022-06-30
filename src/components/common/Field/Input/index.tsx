@@ -6,16 +6,16 @@ interface IInputProps {
   onChange: ChangeEventHandler<HTMLInputElement>;
   [key: string]: any;
 }
-interface TextInput extends IInputProps {
-  type: 'text' | 'search' | 'search';
+export interface TextInput extends IInputProps {
+  type: 'text';
   value: string;
 }
-interface NumberInput extends IInputProps {
+export interface NumberInput extends IInputProps {
   type: 'number';
   value: number;
 }
 
-type TInputProps = TextInput | NumberInput;
+export type TInputProps = TextInput | NumberInput;
 
 export const Input = ({
   type,
