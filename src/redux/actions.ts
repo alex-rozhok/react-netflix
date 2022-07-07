@@ -137,7 +137,7 @@ export const fetchMoviesAction = (
   offset = 0,
   limit = API.limit,
 ): ThunkAction<void, IState, unknown, TActions> => {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     dispatch(showLoaderAction());
     !offset && dispatch(setMoviesAmountAction(0));
 
@@ -149,7 +149,7 @@ export const fetchMoviesAction = (
     const filter = genre === 'all' ? '' : `&filter=${genre}`;
     // eslint-disable-next-line max-len
     const URL = `${API.baseUrl}?limit=${limit}&offset=${offset}&sortOrder=desc&sortBy=${sortBy}${filter}`;
-    await fetch(URL)
+    fetch(URL)
       .then((result) => result.json())
       .then((response) => {
         dispatch(setMoviesAmountAction(response.totalAmount));
@@ -210,12 +210,12 @@ export const putMovieValuesAction = (
   movieData: IMovie,
   action: TPutMovieAction,
 ): ThunkAction<void, IState, unknown, TActions> => {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     const {
       movies: { selectedMovie },
     } = getState();
     const fetchMethod = action === 'add' ? 'POST' : 'PUT';
-    await fetch(`${API.baseUrl}`, {
+    fetch(`${API.baseUrl}`, {
       method: fetchMethod,
       headers: {
         'Content-Type': 'application/json',

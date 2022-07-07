@@ -1,6 +1,5 @@
 import { IGenresList, ISortItems } from '@interfaces';
 
-// const genresList = ['Documentary', 'Comedy', 'Horror', 'Crime'];
 export const genresList: IGenresList[] = [
   {
     label: 'Documentary',
@@ -19,6 +18,8 @@ export const genresList: IGenresList[] = [
     value: 'crime',
   },
 ];
+
+export const filterTabs = [{ label: 'All', value: 'all' }, ...genresList];
 
 export const sortItems: ISortItems[] = [
   { id: 1, value: 'release_date', name: 'RELEASE DATE' },
