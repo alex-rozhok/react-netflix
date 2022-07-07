@@ -13,13 +13,9 @@ export interface IMovie {
   runtime: number;
 }
 
-export interface IGenresSelectOptions {
+export interface IGenresList {
   label: string;
   value: string;
-}
-
-export interface IGenresFilterTabs extends IGenresSelectOptions {
-  id: number;
 }
 
 export interface ISortItems {

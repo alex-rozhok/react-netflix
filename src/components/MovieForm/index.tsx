@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import styles from './style.module.less';
 import { CalendarIcon } from '@icons';
 import { IMovie } from '@interfaces';
-import { genresSelectOptions } from '@data';
+import { genresList } from '@data';
 import { Formik, Form } from 'formik';
 import {
   FormikDatePicker,
@@ -136,7 +136,7 @@ export const MovieForm = ({
             label="GENRE"
             name="genres"
             placeholder="Select Genre"
-            options={genresSelectOptions}
+            options={genresList}
             onChange={(value) => {
               formik.setFieldValue('genres', value);
             }}

@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 import { Button } from '@components';
 import styles from './style.module.less';
 import { useAction, useMoviesState } from '@hooks';
-import { genresFilterTabs } from '@data';
+import { genresList } from '@data';
 
 export const FilterList = (): ReactElement => {
   const { changeGenresAction, fetchMoviesAction } = useAction();
@@ -16,12 +16,13 @@ export const FilterList = (): ReactElement => {
     }
   };
 
+  const filterTabs = [{ label: 'All', value: 'all' }, ...genresList];
   return (
     <ul className="row">
-      {genresFilterTabs.map((filterTab) => {
+      {filterTabs.map((filterTab) => {
         return (
           <li
-            key={filterTab.id}
+            key={filterTab.value}
             className={classNames(
               styles.filter__item,
               filterTab.value === genre && styles.active,
