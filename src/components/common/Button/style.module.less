@@ -3,7 +3,7 @@
   font-weight: 500;
   border-radius: 4px;
 
-  &:hover {
+  &:hover:not(:disabled) {
     color: rgba(255, 255, 255, 0.7);
   }
 }
@@ -27,7 +27,7 @@
   font-weight: 400;
   text-align: left;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: #F65261;
   }
 }
@@ -36,7 +36,8 @@
   &:extend(.button_pad);
   background-color: #f65261;
 
-  &:hover {
+
+  &:hover:not(:disabled) {
     background-color: darken(#f65261, 5%);
   }
 }
@@ -46,7 +47,7 @@
   border: 1px solid #f65261;
   color: #f65261;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: lighten(#323232, 5%);
   }
 }
@@ -59,7 +60,7 @@
   font-size: 2rem;
   background-color: fadeout(#606060, 4%);
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: darken(#606060, 10%);
   }
 }
@@ -115,4 +116,8 @@
 
 .icon {
   padding: 0;
+}
+
+button:disabled {
+  opacity: .4;
 }

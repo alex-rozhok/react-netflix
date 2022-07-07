@@ -6,4 +6,18 @@
   &__full_field {
     grid-column: span 2;
   }
+
+  &__error {
+    position: absolute;
+    color: #f65261;
+    font-size: .8em;
+  }
+
+  &__buttons {
+    padding: 25px 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 180px);
+    justify-content: end;
+    gap: 15px;
+  }
 }

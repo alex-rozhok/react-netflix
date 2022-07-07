@@ -13,78 +13,63 @@ const ALERT: Record<string, TAlertStatus> = {
 };
 
 export type TActions =
-  | selectMovieActionType
-  | changeGenresActionType
-  | sortActionType
-  | showMoviesActionType
-  | setMoviesAmountActionType
-  | hideAlertType
-  | showAlertType
-  | showLoaderActionType
-  | hideLoaderActionType
-  | changeMoviesDataActionType;
+  | TSelectMovieAction
+  | TChangeGenresAction
+  | TSortAction
+  | TShowMoviesAction
+  | TSetMoviesAmountAction
+  | THideAlertAction
+  | TShowAlertAction
+  | TShowLoaderAction
+  | THideLoaderAction;
 
-type hideAlertType = {
+type THideAlertAction = {
   type: typeof Types.ALERT_HIDE;
 };
 
-type showAlertType = {
+type TShowAlertAction = {
   type: typeof Types.ALERT_SHOW;
   text: string;
   status: TAlertStatus;
 };
-type showLoaderActionType = {
+type TShowLoaderAction = {
   type: typeof Types.LOADER_SHOW;
 };
 
-type hideLoaderActionType = {
+type THideLoaderAction = {
   type: typeof Types.LOADER_HIDE;
 };
 
-type selectMovieActionType = {
+type TSelectMovieAction = {
   type: typeof Types.SELECT_MOVIE;
   movie?: IMovie;
 };
 
-type changeGenresActionType = {
+type TChangeGenresAction = {
   type: typeof Types.CHANGE_GENRE;
   genre: string;
 };
 
-type sortActionType = {
+type TSortAction = {
   type: typeof Types.CHANGE_SORT;
   sortBy: string;
 };
 
-type showMoviesActionType = {
+type TShowMoviesAction = {
   type: typeof Types.SHOW_MOVIES;
   movies: IMovie[];
 };
 
-type setMoviesAmountActionType = {
+type TSetMoviesAmountAction = {
   type: typeof Types.SET_MOVIES_AMOUNT;
   count: number;
 };
 
-type changeMoviesDataActionType = {
-  type: typeof Types.CHANGE_MOVIES_DATA;
-  movie: IMovie;
-};
-
-export const changeMoviesDataAction = (
-  movie: IMovie,
-): changeMoviesDataActionType => {
-  return {
-    type: Types.CHANGE_MOVIES_DATA,
-    movie,
-  };
-};
-
-const hideAlert = (): hideAlertType => ({
+const hideAlert = (): THideAlertAction => ({
   type: Types.ALERT_HIDE,
 });
 
-const showAlert = (text: string, status: TAlertStatus): showAlertType => ({
+const showAlert = (text: string, status: TAlertStatus): TShowAlertAction => ({
   type: Types.ALERT_SHOW,
   text,
   status,
@@ -93,7 +78,7 @@ const showAlert = (text: string, status: TAlertStatus): showAlertType => ({
 export const showAlertAction = (
   text: string,
   status: TAlertStatus,
-): ThunkAction<void, IState, unknown, hideAlertType | showAlertType> => {
+): ThunkAction<void, IState, unknown, THideAlertAction | TShowAlertAction> => {
   return (dispatch) => {
     dispatch(showAlert(text, status));
     setTimeout(() => {
@@ -102,43 +87,43 @@ export const showAlertAction = (
   };
 };
 
-export const showLoaderAction = (): showLoaderActionType => ({
+export const showLoaderAction = (): TShowLoaderAction => ({
   type: Types.LOADER_SHOW,
 });
 
-export const hideLoaderAction = (): hideLoaderActionType => ({
+export const hideLoaderAction = (): THideLoaderAction => ({
   type: Types.LOADER_HIDE,
 });
 
-export const selectMovieAction = (movie?: IMovie): selectMovieActionType => ({
+export const selectMovieAction = (movie?: IMovie): TSelectMovieAction => ({
   type: Types.SELECT_MOVIE,
   movie,
 });
 
-export const changeGenresAction = (genre: string): changeGenresActionType => ({
+export const changeGenresAction = (genre: string): TChangeGenresAction => ({
   type: Types.CHANGE_GENRE,
   genre,
 });
 
-export const sortAction = (sortBy: string): sortActionType => ({
+export const sortAction = (sortBy: string): TSortAction => ({
   type: Types.CHANGE_SORT,
   sortBy,
 });
 
-export const showMoviesAction = (movies: IMovie[]): showMoviesActionType => ({
+export const showMoviesAction = (movies: IMovie[]): TShowMoviesAction => ({
   type: Types.SHOW_MOVIES,
   movies,
 });
 
 export const setMoviesAmountAction = (
   count: number,
-): setMoviesAmountActionType => {
+): TSetMoviesAmountAction => {
   return { type: Types.SET_MOVIES_AMOUNT, count };
 };
 
 export const showMoreMoviesAction = (
   data: IMovie[],
-): ThunkAction<void, IState, unknown, showMoviesActionType> => {
+): ThunkAction<void, IState, unknown, TShowMoviesAction> => {
   return (dispatch, getState) => {
     const {
       movies: { movies },
@@ -153,28 +138,28 @@ export const fetchMoviesAction = (
   limit = API.limit,
 ): ThunkAction<void, IState, unknown, TActions> => {
   return async (dispatch, getState) => {
-    try {
-      dispatch(showLoaderAction());
-      !offset && dispatch(setMoviesAmountAction(0));
+    dispatch(showLoaderAction());
+    !offset && dispatch(setMoviesAmountAction(0));
 
-      const showMovies = offset ? showMoreMoviesAction : showMoviesAction;
-      const {
-        movies: { sortBy, genre },
-      } = getState();
+    const showMovies = offset ? showMoreMoviesAction : showMoviesAction;
+    const {
+      movies: { sortBy, genre },
+    } = getState();
 
-      const filter = genre === 'All' ? '' : `&filter=${genre}`;
-      // eslint-disable-next-line max-len
-      const URL = `${API.baseUrl}?limit=${limit}&offset=${offset}&sortOrder=desc&sortBy=${sortBy}${filter}`;
-      const response = await fetch(URL).then((result) => result.json());
-      setTimeout(() => {
+    const filter = genre === 'all' ? '' : `&filter=${genre}`;
+    // eslint-disable-next-line max-len
+    const URL = `${API.baseUrl}?limit=${limit}&offset=${offset}&sortOrder=desc&sortBy=${sortBy}${filter}`;
+    await fetch(URL)
+      .then((result) => result.json())
+      .then((response) => {
         dispatch(setMoviesAmountAction(response.totalAmount));
         dispatch(showMovies(response.data));
         dispatch(hideLoaderAction());
-      }, 300);
-    } catch (e) {
-      dispatch(hideLoaderAction());
-      dispatch(showAlertAction('Failed to get movie list', ALERT.error));
-    }
+      })
+      .catch(() => {
+        dispatch(hideLoaderAction());
+        dispatch(showAlertAction('Failed to get movie list', ALERT.error));
+      });
   };
 };
 
@@ -216,5 +201,43 @@ export const requestDeleteMovieAction = (
     } else {
       dispatch(showAlertAction('Failed to delete movie', ALERT.error));
     }
+  };
+};
+
+type TPutMovieAction = 'add' | 'edit';
+
+export const putMovieValuesAction = (
+  movieData: IMovie,
+  action: TPutMovieAction,
+): ThunkAction<void, IState, unknown, TActions> => {
+  return async (dispatch, getState) => {
+    const {
+      movies: { selectedMovie },
+    } = getState();
+    const fetchMethod = action === 'add' ? 'POST' : 'PUT';
+    await fetch(`${API.baseUrl}`, {
+      method: fetchMethod,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(movieData),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        dispatch(
+          showAlertAction(
+            `Movie has been ${action}ed successfully`,
+            ALERT.success,
+          ),
+        );
+        dispatch(fetchMoviesAction());
+        if (action === 'edit') {
+          selectedMovie?.id === movieData.id &&
+            dispatch(selectMovieAction(movieData));
+        }
+      })
+      .catch(() => {
+        dispatch(showAlertAction(`Failed to ${action} new movie`, ALERT.error));
+      });
   };
 };

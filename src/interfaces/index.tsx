@@ -13,11 +13,13 @@ export interface IMovie {
   runtime: number;
 }
 
-export interface IGenre {
-  id: number;
+export interface IGenresSelectOptions {
   label: string;
   value: string;
-  active: boolean;
+}
+
+export interface IGenresFilterTabs extends IGenresSelectOptions {
+  id: number;
 }
 
 export interface ISortItems {

@@ -1,22 +1,25 @@
 import React from 'react';
-import DatePicker from 'react-datepicker';
+import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Input } from '@components';
 import './style.less';
-import { TextInput } from '../Field/Input';
+import { ITextInput } from '../Field/Input';
 
 interface IDatePickerProps {
-  date: string | null;
-  changeDate: (date: string) => void;
+  value: string | null;
+  onChange: (date: string) => void;
   icon?: React.ReactElement;
   id?: string;
+  name: string;
+  placeholder?: string;
 }
 
-export const MyDatePicker = ({
-  date,
-  changeDate,
+export const DatePicker = ({
+  value,
+  onChange,
   icon,
   id,
+  placeholder,
 }: IDatePickerProps): React.ReactElement => {
   const formatedDate = (date: Date): string => {
     const y = date.getFullYear();
@@ -30,10 +33,10 @@ export const MyDatePicker = ({
   };
 
   const changeHandler = (date: Date) => {
-    changeDate(formatedDate(date));
+    onChange(formatedDate(date));
   };
 
-  const CustomInput = React.forwardRef<HTMLInputElement, TextInput>(
+  const CustomInput = React.forwardRef<HTMLInputElement, ITextInput>(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (props, ref): React.ReactElement => (
       <Input
@@ -42,15 +45,15 @@ export const MyDatePicker = ({
         onChange={props.onChange}
         onClick={props.onClick}
         icon={icon}
-        placeholder="Select Date"
         id={id}
+        placeholder={placeholder}
       />
     ),
   );
   CustomInput.displayName = 'DatePicker';
   return (
-    <DatePicker
-      selected={date ? new Date(date) : null}
+    <ReactDatePicker
+      selected={value ? new Date(value) : null}
       onChange={changeHandler}
       dateFormat="yyyy-MM-dd"
       customInput={<CustomInput />}

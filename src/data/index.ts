@@ -1,11 +1,31 @@
-import { IGenre, ISortItems } from '@interfaces';
+import {
+  IGenresFilterTabs,
+  IGenresSelectOptions,
+  ISortItems,
+} from '@interfaces';
 
-export const genres: IGenre[] = [
-  { id: 1, label: 'All', value: 'all', active: true },
-  { id: 2, label: 'Documentary', value: 'documentary', active: false },
-  { id: 3, label: 'Comedy', value: 'comedy', active: false },
-  { id: 4, label: 'Horror', value: 'horror', active: false },
-  { id: 5, label: 'Crime', value: 'crime', active: false },
+const genresList = ['Documentary', 'Comedy', 'Horror', 'Crime'];
+
+export const genresSelectOptions: IGenresSelectOptions[] = genresList.map(
+  (genre) => ({
+    label: genre,
+    value: genre.toLowerCase().replace(/ /g, '-'),
+  }),
+);
+
+export const genresFilterTabs: IGenresFilterTabs[] = genresSelectOptions.reduce(
+  (filterTabs, genre, index) => {
+    return [...filterTabs, { id: index + 2, ...genre }];
+  },
+  [{ id: 1, label: 'All', value: 'all' }],
+);
+
+export const genres = [
+  { id: 1, label: 'All', value: 'all' },
+  { id: 2, label: 'Documentary', value: 'documentary' },
+  { id: 3, label: 'Comedy', value: 'comedy' },
+  { id: 4, label: 'Horror', value: 'horror' },
+  { id: 5, label: 'Crime', value: 'crime' },
 ];
 
 export const sortItems: ISortItems[] = [

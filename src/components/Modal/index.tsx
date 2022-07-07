@@ -6,12 +6,12 @@ import { Footer, IFooterProps } from './ModalFooter';
 import { Button } from '@components';
 
 type ModalFC<T> = React.FC<T> & {
-  Footer: React.FC<IFooterProps>;
   Body: React.FC<IBodyProps>;
+  Footer: React.FC<IFooterProps>;
 };
 
 export interface IModal {
-  children: ReactElement[];
+  children: ReactElement[] | ReactElement;
   closeModal: () => void;
   isOpen: boolean;
 }
