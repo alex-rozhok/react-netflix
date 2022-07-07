@@ -1,11 +1,11 @@
-import React, { FC, ReactElement, useEffect, useRef } from 'react';
+import React, { ReactElement, useEffect, useRef } from 'react';
 import styles from './style.module.less';
 import { Body, IBodyProps } from './DropdownBody';
 import { Button } from '@common';
 import { DropdownProvider } from './DropdownContext';
-import { IButtonProps } from 'components/common/Button';
+import { IButtonProps } from '@common/Button';
 
-export type DropdownFC<P> = React.FC<P> & {
+export type DropdownFC<T> = React.FC<T> & {
   Button: React.FC<IButtonProps>;
   Body: React.FC<IBodyProps>;
 };
@@ -17,12 +17,12 @@ export interface IDropdown {
   isCloseButton?: boolean;
 }
 
-export const DropdownWrapper: FC<IDropdown> = ({
+export const DropdownWrapper = ({
   children,
   isShow,
   closeDropdown,
   isCloseButton,
-}) => {
+}: IDropdown) => {
   const dropdown = useRef<HTMLDivElement>(null);
 
   const clickOutside = (e: MouseEvent) => {

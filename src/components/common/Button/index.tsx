@@ -1,4 +1,4 @@
-import React, { FC, MouseEventHandler, ReactNode } from 'react';
+import React, { MouseEventHandler, ReactNode } from 'react';
 import styles from './style.module.less';
 
 export interface IButtonProps {
@@ -10,7 +10,12 @@ export interface IButtonProps {
   value?: string;
 }
 
-export const Button: FC<IButtonProps> = ({ children, type, view, ...rest }) => {
+export const Button = ({
+  children,
+  type,
+  view,
+  ...rest
+}: IButtonProps): React.ReactElement => {
   return (
     <button type={type} className={styles[view]} {...rest}>
       {children}

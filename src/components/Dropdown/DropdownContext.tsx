@@ -1,11 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { useContext } from 'react';
-import { createContext } from 'react';
+import React, { ReactElement } from 'react';
+import { useContext, createContext } from 'react';
+import { IDropdown } from './index';
 
-const DropdownContext = createContext(null);
+type TValue = Omit<IDropdown, 'children'>;
 
-export const DropdownProvider = ({ children, value }) => {
+interface IProvider {
+  children: ReactElement;
+  value: TValue;
+}
+
+const DropdownContext = createContext<TValue>({} as TValue);
+
+export const DropdownProvider = ({
+  children,
+  value,
+}: IProvider): ReactElement => {
   return (
     <DropdownContext.Provider value={value}>
       {children}
@@ -14,8 +23,3 @@ export const DropdownProvider = ({ children, value }) => {
 };
 
 export const useDropdownContext = () => useContext(DropdownContext);
-
-DropdownProvider.propTypes = {
-  children: PropTypes.node,
-  value: PropTypes.object,
-};

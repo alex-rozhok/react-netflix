@@ -2,9 +2,8 @@ import React, { ReactElement, useReducer } from 'react';
 import styles from './style.module.less';
 import { ThreeDotsIcon } from '@icons';
 import { Modal, MovieForm, Dropdown, Button } from '@components';
-import { deleteAction, showMovieAction } from '@actions';
-import { useAppContext } from '@hooks';
-import { IMovie } from '@types';
+import { IMovie } from '@interfaces';
+import { useAction, useMoviesState } from '@hooks';
 
 interface IMovieOptionsProps {
   movie: IMovie;
@@ -23,10 +22,6 @@ interface IState {
   modalType: string;
 }
 
-interface IAction {
-  [key: string]: boolean | string;
-}
-
 export const MovieOptions = ({
   movie,
   setShowOptions,
@@ -38,16 +33,13 @@ export const MovieOptions = ({
   };
 
   const [state, dispatch] = useReducer(
-    (state: IState, action: IAction): IState => {
+    (state: IState, action: Partial<IState>): IState => {
       return { ...state, ...action };
     },
     initialState,
   );
-
-  const {
-    state: { selectedMovie },
-    dispatch: appDispatch,
-  } = useAppContext();
+  const { selectedMovie } = useMoviesState();
+  const { requestDeleteMovieAction, selectMovieAction } = useAction();
 
   const toggleDropdown = () =>
     dispatch({
@@ -65,13 +57,13 @@ export const MovieOptions = ({
   };
   const closeModal = () => setShowOptions(false);
 
-  const deleteMovie = (payload: IMovie) => {
-    appDispatch(deleteAction(payload));
-    selectedMovie?.id === payload.id && appDispatch(showMovieAction(null));
+  const deleteMovie = (id: number) => {
+    requestDeleteMovieAction(id);
+    selectedMovie?.id === id && selectMovieAction();
   };
 
   const confirmDelete = () => {
-    deleteMovie(movie);
+    deleteMovie(movie.id);
     closeModal();
   };
 

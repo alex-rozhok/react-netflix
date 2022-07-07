@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import styles from './style.module.less';
 import { Poster, MovieGenres } from '@components';
-import { IMovie } from '@types';
+import { IMovie } from '@interfaces';
 
 interface SelectedMovieProps {
   movie: IMovie;
@@ -9,8 +9,8 @@ interface SelectedMovieProps {
 
 export const SelectedMovie = ({ movie }: SelectedMovieProps): ReactElement => {
   const runtime = (() => {
-    const hours = Math.trunc(+movie.runtime / 60);
-    const minutes = +movie.runtime % 60;
+    const hours = Math.trunc(movie.runtime / 60);
+    const minutes = movie.runtime % 60;
     return `${hours}h ${minutes}min`;
   })();
 
@@ -24,7 +24,9 @@ export const SelectedMovie = ({ movie }: SelectedMovieProps): ReactElement => {
               <h2 className={styles.selectedMovie__title}>{movie.title}</h2>
               <MovieGenres genres={movie.genres} />
             </div>
-            <div className={styles.selectedMovie__rating}>{movie.rating}</div>
+            <div className={styles.selectedMovie__rating}>
+              {movie.vote_average}
+            </div>
           </div>
           <div className={styles.selectedMovie__times}>
             <p>{movie.release_date}</p>

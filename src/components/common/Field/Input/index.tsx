@@ -1,21 +1,29 @@
-import React, { ChangeEventHandler, FC, ReactElement } from 'react';
+import React, { ChangeEventHandler, ReactElement } from 'react';
 import styles from '../style.module.less';
 
 interface IInputProps {
-  type?: 'text' | 'number' | 'search' | 'search';
-  value: string;
-  placeholder?: string;
   icon?: ReactElement;
   onChange: ChangeEventHandler<HTMLInputElement>;
+  [key: string]: any;
+}
+export interface TextInput extends IInputProps {
+  type: 'text';
+  value: string;
+}
+export interface NumberInput extends IInputProps {
+  type: 'number';
+  value: number;
 }
 
-export const Input: FC<IInputProps> = ({
+export type TInputProps = TextInput | NumberInput;
+
+export const Input = ({
   type,
   value,
   onChange,
   icon,
   ...attr
-}) => (
+}: TInputProps): ReactElement => (
   <div className={styles.field__wrapper}>
     <input
       type={type}
@@ -27,7 +35,3 @@ export const Input: FC<IInputProps> = ({
     {icon && <span className={styles.field__icon}>{icon}</span>}
   </div>
 );
-
-Input.defaultProps = {
-  type: 'text',
-};

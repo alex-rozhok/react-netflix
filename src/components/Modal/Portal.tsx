@@ -1,8 +1,8 @@
-import { ReactElement, ReactNode, useEffect } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 interface IPortalProps {
-  children: ReactNode;
+  children: ReactElement;
 }
 
 export const Portal = ({ children }: IPortalProps): ReactElement => {
