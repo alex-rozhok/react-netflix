@@ -1,21 +1,13 @@
-import React, { ReactElement, useMemo } from 'react';
+import React, { ReactElement } from 'react';
 import classNames from 'classnames/bind';
 import { Button } from '@components';
 import styles from './style.module.less';
 import { useAction, useMoviesState } from '@hooks';
-import { genres } from '@data';
+import { filterTabs } from '@data';
 
 export const FilterList = (): ReactElement => {
   const { changeGenresAction, fetchMoviesAction } = useAction();
   const { genre } = useMoviesState();
-
-  const genresTab = useMemo(() => {
-    return [...genres].map((item) =>
-      item.label === genre
-        ? { ...item, active: true }
-        : { ...item, active: false },
-    );
-  }, [genre]);
 
   const changeFilter = (clickedGenre: string) => {
     if (clickedGenre !== genre) {
@@ -26,22 +18,22 @@ export const FilterList = (): ReactElement => {
 
   return (
     <ul className="row">
-      {genresTab.map((genre) => {
+      {filterTabs.map((filterTab) => {
         return (
           <li
-            key={genre.id}
+            key={filterTab.value}
             className={classNames(
               styles.filter__item,
-              genre.active && styles.active,
+              filterTab.value === genre && styles.active,
             )}
           >
             <Button
               view="filter"
               onClick={() => {
-                changeFilter(genre.label);
+                changeFilter(filterTab.value);
               }}
             >
-              {genre.label}
+              {filterTab.label}
             </Button>
           </li>
         );

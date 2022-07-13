@@ -8,11 +8,12 @@ export interface IButtonProps {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   form?: string;
   value?: string;
+  disabled?: boolean;
 }
 
 export const Button = ({
   children,
-  type,
+  type = 'button',
   view,
   ...rest
 }: IButtonProps): React.ReactElement => {
@@ -21,9 +22,4 @@ export const Button = ({
       {children}
     </button>
   );
-};
-
-Button.defaultProps = {
-  view: 'button',
-  type: 'button',
 };

@@ -1,12 +1,17 @@
 import React, { ReactElement, useState } from 'react';
 import styles from './style.module.less';
 import { Logo, Search, Modal, MovieForm, Button } from '@components';
+import { useAction } from '@hooks';
+import { IMovie } from '@interfaces';
 
 export const Home = (): ReactElement => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const { putMovieValuesAction } = useAction();
   const openModalHandler = () => setModalIsOpen(true);
   const closeModalHandler = () => setModalIsOpen(false);
-
+  const createMovie = (movie: IMovie) => {
+    putMovieValuesAction(movie, 'add');
+  };
   return (
     <section className={styles.hero}>
       <div className="container">
@@ -20,17 +25,10 @@ export const Home = (): ReactElement => {
             <Modal.Body title="ADD MOVIE">
               <MovieForm
                 formId="addMovie"
+                submitHandler={createMovie}
                 additionalSubmitHandler={closeModalHandler}
               />
             </Modal.Body>
-            <Modal.Footer>
-              <Button form="addMovie" type="reset" view="secondary">
-                RESET
-              </Button>
-              <Button form="addMovie" type="submit" view="main">
-                SUBMIT
-              </Button>
-            </Modal.Footer>
           </Modal>
         </div>
         <div className={styles.hero__search}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import Select, { components } from 'react-select';
+import ReactSelect, { components, GroupBase } from 'react-select';
 import './style.less';
 import { CaretDownIcon, CheckedIcon } from '@icons';
 
@@ -25,21 +25,20 @@ const DropdownIndicator = (props) => (
 
 interface IMySelect {
   value: string[];
+  options: GroupBase<string>[];
+  onChange: (arg?: any) => void;
   [key: string]: any;
 }
 
-export const MySelect = ({ value, ...props }: IMySelect) => {
-  const selectedValue = value.reduce((res, item) => {
-    res.push({ label: item, value: item.toLowerCase().replace(/ /g, '-') });
-    return res;
-  }, []);
-
+export const Select = ({ value, options, onChange, ...props }: IMySelect) => {
   return (
-    <Select
+    <ReactSelect
+      value={value}
+      options={options}
+      onChange={onChange}
       classNamePrefix="select"
       className="select"
       closeMenuOnSelect={false}
-      value={selectedValue}
       isMulti={true}
       isSearchable={false}
       hideSelectedOptions={false}

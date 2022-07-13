@@ -39,7 +39,8 @@ export const MovieOptions = ({
     initialState,
   );
   const { selectedMovie } = useMoviesState();
-  const { requestDeleteMovieAction, selectMovieAction } = useAction();
+  const { requestDeleteMovieAction, selectMovieAction, putMovieValuesAction } =
+    useAction();
 
   const toggleDropdown = () =>
     dispatch({
@@ -67,6 +68,11 @@ export const MovieOptions = ({
     closeModal();
   };
 
+  const editMovie = (movie: IMovie) => {
+    !movie.tagline && (movie.tagline = 'tagline');
+    putMovieValuesAction(movie, 'edit');
+  };
+
   const listOptions = [
     { id: 1, view: 'listItem', onClick: () => openModal('edit'), name: 'Edit' },
     {
@@ -75,17 +81,6 @@ export const MovieOptions = ({
       onClick: () => openModal('delete'),
       name: 'Delete',
     },
-  ];
-
-  const editMovieButtons = [
-    {
-      id: 1,
-      view: 'secondary',
-      type: 'reset',
-      name: 'RESET',
-      form: 'editMovie',
-    },
-    { id: 2, view: 'main', type: 'submit', name: 'SUBMIT', form: 'editMovie' },
   ];
 
   const renderOptions = ({ name, view, id, ...rest }: IRenderOptions) => (
@@ -132,10 +127,10 @@ export const MovieOptions = ({
           <MovieForm
             formId="editMovie"
             movie={movie}
+            submitHandler={editMovie}
             additionalSubmitHandler={closeModal}
           />
         </Modal.Body>
-        <Modal.Footer>{editMovieButtons.map(renderOptions)}</Modal.Footer>
       </Modal>
     </>
   );

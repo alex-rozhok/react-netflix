@@ -1,25 +1,35 @@
-import React, { ChangeEvent, FormEvent, ReactElement, useReducer } from 'react';
+import React, { ReactElement } from 'react';
+import * as Yup from 'yup';
 import styles from './style.module.less';
 import { CalendarIcon } from '@icons';
-import { Input, Label, Select, Textarea, DatePicker } from '@components';
 import { IMovie } from '@interfaces';
-import { useAction, useMoviesState } from '@hooks';
-import { genres } from '@data';
+import { genresList } from '@data';
+import { Formik, Form } from 'formik';
+import {
+  FormikDatePicker,
+  FormikInput,
+  FormikSelect,
+  FormikTextArea,
+} from './FormikFields';
+import { Button } from '@common/Button';
+import classNames from 'classnames/bind';
+
 interface IMovieFormProps {
   formId: string;
   movie?: IMovie;
+  submitHandler: (movie: IMovie) => void;
   additionalSubmitHandler?: () => void;
 }
 
 export const MovieForm = ({
   formId,
   movie,
+  submitHandler,
   additionalSubmitHandler = () => {},
 }: IMovieFormProps): ReactElement => {
-  const initialState: IMovie = {
-    id: Date.now(),
+  const defaultValue = {
     title: '',
-    tagline: '',
+    tagline: 'tagline',
     vote_average: 0,
     vote_count: 0,
     release_date: '',
@@ -31,123 +41,139 @@ export const MovieForm = ({
     runtime: 0,
   };
 
-  const { selectedMovie } = useMoviesState();
-  const { changeMoviesDataAction, selectMovieAction } = useAction();
+  // format genres to array of object
+  const receivedMovie = movie
+    ? {
+        ...movie,
+        genres: movie?.genres.map((el) => ({
+          label: el,
+          value: el.toLowerCase().replace(/ /g, '-'),
+        })),
+      }
+    : null;
 
-  const stateData = movie || initialState;
-  const [state, dispatch] = useReducer(
-    (state: IMovie, action: Partial<IMovie>): IMovie => {
-      return { ...state, ...action };
-    },
-    stateData,
-  );
+  const stateData = receivedMovie || defaultValue;
 
-  const changeMoviesData = (payload: IMovie) => {
-    changeMoviesDataAction(payload);
-    selectedMovie?.id === payload.id && selectMovieAction(payload);
-  };
+  // format genres to array of strings
+  const formatGenresValue = (genres) => genres.map((genre) => genre.label);
 
-  const handlerSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    changeMoviesData(state);
+  const handlerSubmit = (values: IMovie) => {
+    const formatedValues = {
+      ...values,
+      genres: formatGenresValue(values.genres),
+    };
+    submitHandler(formatedValues);
     additionalSubmitHandler();
   };
 
-  const handlerReset = () => {
-    dispatch(stateData);
-  };
-  const getValue = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => event.target.value;
-
-  const options = genres.filter((genre) => genre.label !== 'All');
-
-  const selectChangeHandler = (newValue: any) => {
-    dispatch({ genres: newValue.map((value: any) => value.label) });
-  };
+  const validationSchema = Yup.object({
+    title: Yup.string().required('Required'),
+    release_date: Yup.date().required('Required'),
+    poster_path: Yup.string()
+      .matches(/^https?:\/\/\S+(?:jpg|jpeg|png)$/, 'should be path to img')
+      .required('Required'),
+    vote_average: Yup.number()
+      .required('Required')
+      .nullable()
+      .max(10, 'rating must be less than or equal to 10')
+      .min(0, 'rating must be greater than or equal to 0'),
+    genres: Yup.array()
+      .of(
+        Yup.object({
+          label: Yup.string().required(),
+          value: Yup.string().required(),
+        }),
+      )
+      .min(1, 'Required'),
+    runtime: Yup.number()
+      .required('Required')
+      .integer('Runtime must be an integer')
+      .min(0)
+      .nullable(),
+    overview: Yup.string().required('Required'),
+  });
 
   return (
-    <form
-      id={formId}
+    <Formik
+      initialValues={stateData}
       onSubmit={handlerSubmit}
-      onReset={handlerReset}
-      className={styles.form}
+      validationSchema={validationSchema}
     >
-      <Label target="movie-title">
-        TITLE
-        <Input
-          id="movie-title"
-          type="text"
-          value={state.title}
-          onChange={(e) => dispatch({ title: getValue(e) })}
-          placeholder="Title"
-        />
-      </Label>
-      <Label target="movie-date">
-        RELEASE DATE
-        <DatePicker
-          date={state.release_date}
-          changeDate={(date) => {
-            dispatch({ release_date: date });
-          }}
-          icon={<CalendarIcon />}
-          id="movie-date"
-        />
-      </Label>
-      <Label target="movie-poster">
-        MOVIE URL
-        <Input
-          id="movie-poster"
-          type="text"
-          value={state.poster_path}
-          onChange={(e) => dispatch({ poster_path: getValue(e) })}
-          placeholder="https://"
-        />
-      </Label>
-      <Label target="movie-rating">
-        RATING
-        <Input
-          id="movie-rating"
-          value={state.vote_average}
-          onChange={(e) => dispatch({ vote_average: +getValue(e) })}
-          placeholder="9.9"
-          type="number"
-          max="10"
-          min="0"
-          step="0.1"
-        />
-      </Label>
-      <Label target="movie-genres">
-        GENRE
-        <Select
-          id="movie-genres"
-          options={options}
-          value={state.genres}
-          onChange={selectChangeHandler}
-          placeholder="Select Genre"
-        />
-      </Label>
-      <Label target="movie-rutime">
-        RUNTIME
-        <Input
-          id="movie-rutime"
-          value={state.runtime}
-          onChange={(e) => dispatch({ runtime: +getValue(e) })}
-          placeholder="Minutes"
-          type="number"
-        />
-      </Label>
-      <div className={styles.form__full_field}>
-        <Label target="movie-overview">
-          OVERVIEW
-          <Textarea
-            id="movie-overview"
-            value={state.overview}
-            onChange={(e) => dispatch({ overview: getValue(e) })}
-            placeholder="Movie description"
+      {(formik) => (
+        <Form id={formId} className={styles.form}>
+          <FormikInput
+            label="Title"
+            name="title"
+            type="text"
+            placeholder="Title"
           />
-        </Label>
-      </div>
-    </form>
+          <FormikDatePicker
+            label="RELEASE DATE"
+            name="release_date"
+            id="date"
+            placeholder="Select Date"
+            onChange={(value) => formik.setFieldValue('release_date', value)}
+            icon={<CalendarIcon />}
+          />
+          <FormikInput
+            label="MOVIE URL"
+            name="poster_path"
+            id="poster"
+            type="text"
+            placeholder="https://"
+          />
+          <FormikInput
+            label="RATING"
+            name="vote_average"
+            id="rating"
+            type="number"
+            placeholder="Rating"
+            max="10"
+            min="0"
+            step="0.1"
+          />
+          <FormikSelect
+            label="GENRE"
+            name="genres"
+            placeholder="Select Genre"
+            options={genresList}
+            onChange={(value) => {
+              formik.setFieldValue('genres', value);
+            }}
+          />
+          <FormikInput
+            label="RUNTIME"
+            name="runtime"
+            type="number"
+            placeholder="Minutes"
+            min="0"
+          />
+          <div className={styles.form__full_field}>
+            <FormikTextArea
+              label="OVERVIEW"
+              name="overview"
+              placeholder="Movie description"
+            />
+          </div>
+          <div
+            className={classNames(
+              styles.form__full_field,
+              styles.form__buttons,
+            )}
+          >
+            <Button disabled={!formik.dirty} type="reset" view="secondary">
+              RESET
+            </Button>
+            <Button
+              disabled={!formik.dirty || !formik.isValid}
+              type="submit"
+              view="main"
+            >
+              SUBMIT
+            </Button>
+          </div>
+        </Form>
+      )}
+    </Formik>
   );
 };

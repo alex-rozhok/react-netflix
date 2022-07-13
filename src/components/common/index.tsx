@@ -1,5 +1,5 @@
 export { Button } from './Button';
 export { Input, Textarea } from './Field';
-export { MySelect as Select } from './MySelect';
-export { MyDatePicker as DatePicker } from './MyDatePicker';
+export { Select as Select } from './Select';
+export { DatePicker } from './DatePicker';
 export { Label } from './Label';

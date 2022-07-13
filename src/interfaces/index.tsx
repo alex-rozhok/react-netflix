@@ -13,11 +13,9 @@ export interface IMovie {
   runtime: number;
 }
 
-export interface IGenre {
-  id: number;
+export interface IGenresList {
   label: string;
   value: string;
-  active: boolean;
 }
 
 export interface ISortItems {

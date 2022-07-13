@@ -3,11 +3,11 @@ import styles from './style.module.less';
 import { Poster, MovieGenres } from '@components';
 import { IMovie } from '@interfaces';
 
-interface SelectedMovieProps {
+interface ISelectedMovieProps {
   movie: IMovie;
 }
 
-export const SelectedMovie = ({ movie }: SelectedMovieProps): ReactElement => {
+export const SelectedMovie = ({ movie }: ISelectedMovieProps): ReactElement => {
   const runtime = (() => {
     const hours = Math.trunc(movie.runtime / 60);
     const minutes = movie.runtime % 60;
