@@ -69,10 +69,12 @@ module.exports = {
       '@data': path.resolve(__dirname, 'src/data'),
       '@interfaces': path.resolve(__dirname, 'src/interfaces'),
       '@constants': path.resolve(__dirname, 'src/constants'),
+      '@pages': path.resolve(__dirname, 'src/pages'),
     },
   },
   optimization: optimization(),
   devServer: {
+    historyApiFallback: true,
     port: 5000,
     open: true,
     compress: true,

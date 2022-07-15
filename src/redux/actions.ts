@@ -21,7 +21,8 @@ export type TActions =
   | THideAlertAction
   | TShowAlertAction
   | TShowLoaderAction
-  | THideLoaderAction;
+  | THideLoaderAction
+  | TChangeTitleSearch;
 
 type THideAlertAction = {
   type: typeof Types.ALERT_HIDE;
@@ -63,6 +64,11 @@ type TShowMoviesAction = {
 type TSetMoviesAmountAction = {
   type: typeof Types.SET_MOVIES_AMOUNT;
   count: number;
+};
+
+type TChangeTitleSearch = {
+  type: typeof Types.CHANGE_TITLE_SEARCH;
+  title: string;
 };
 
 const hideAlert = (): THideAlertAction => ({
@@ -115,6 +121,11 @@ export const showMoviesAction = (movies: IMovie[]): TShowMoviesAction => ({
   movies,
 });
 
+export const changeTitleSearchAction = (title: string): TChangeTitleSearch => ({
+  type: Types.CHANGE_TITLE_SEARCH,
+  title,
+});
+
 export const setMoviesAmountAction = (
   count: number,
 ): TSetMoviesAmountAction => {
@@ -133,33 +144,71 @@ export const showMoreMoviesAction = (
   };
 };
 
-export const fetchMoviesAction = (
+interface ISearchParams {
+  offset?: number;
+  limit?: number;
+}
+export const fetchMoviesAction = ({
   offset = 0,
   limit = API.limit,
-): ThunkAction<void, IState, unknown, TActions> => {
+}: ISearchParams = {}): ThunkAction<void, IState, unknown, TActions> => {
   return (dispatch, getState) => {
     dispatch(showLoaderAction());
     !offset && dispatch(setMoviesAmountAction(0));
 
     const showMovies = offset ? showMoreMoviesAction : showMoviesAction;
     const {
-      movies: { sortBy, genre },
+      movies: { sortBy, genre, title },
     } = getState();
 
+    const titleSearch = title ? `&searchBy=title&search=${title}` : '';
     const filter = genre === 'all' ? '' : `&filter=${genre}`;
     // eslint-disable-next-line max-len
-    const URL = `${API.baseUrl}?limit=${limit}&offset=${offset}&sortOrder=desc&sortBy=${sortBy}${filter}`;
-    fetch(URL)
-      .then((result) => result.json())
-      .then((response) => {
-        dispatch(setMoviesAmountAction(response.totalAmount));
-        dispatch(showMovies(response.data));
+    const URL = `${API.baseUrl}?limit=${limit}&offset=${offset}&sortOrder=desc&sortBy=${sortBy}${filter}${titleSearch}`;
+    return fetch(URL)
+      .then((response) => response.json())
+      .then((result) => {
+        dispatch(setMoviesAmountAction(result.totalAmount));
+        dispatch(showMovies(result.data));
         dispatch(hideLoaderAction());
       })
       .catch(() => {
         dispatch(hideLoaderAction());
         dispatch(showAlertAction('Failed to get movie list', ALERT.error));
       });
+  };
+};
+
+export const fetchMovieById = (
+  id: number,
+): ThunkAction<void, IState, unknown, TActions> => {
+  return async (dispatch) => {
+    fetch(`${API.baseUrl}/${id}`)
+      .then((response) => response.json())
+      .then((movie) => {
+        dispatch(selectMovieAction(movie));
+      })
+      .catch(() => {
+        dispatch(showAlertAction('Failed to get movie', ALERT.error));
+        dispatch(selectMovieAction());
+      });
+  };
+};
+
+export const fetchNewGenresAction = (
+  genre: string,
+): ThunkAction<void, IState, unknown, TActions> => {
+  return (dispatch) => {
+    dispatch(changeGenresAction(genre));
+    dispatch(fetchMoviesAction());
+  };
+};
+export const fetchNewSortAction = (
+  sortBy: string,
+): ThunkAction<void, IState, unknown, TActions> => {
+  return (dispatch) => {
+    dispatch(sortAction(sortBy));
+    dispatch(fetchMoviesAction());
   };
 };
 
@@ -193,7 +242,7 @@ export const requestDeleteMovieAction = (
     if (status >= 200 && status < 300) {
       dispatch(deleteMovieAction(id));
       if (totalMovies > movies.length) {
-        dispatch(fetchMoviesAction(movies.length - 1, 1));
+        dispatch(fetchMoviesAction({ offset: movies.length - 1, limit: 1 }));
       }
       dispatch(
         showAlertAction('Movie has been deleted successfully', ALERT.success),

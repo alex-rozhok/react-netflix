@@ -7,6 +7,7 @@ const initialState: IMoviesState = {
   movies: [],
   genre: 'all',
   sortBy: 'release_date',
+  title: '',
   totalMovies: 0,
 };
 
@@ -25,6 +26,8 @@ export const moviesReducer = (
       return { ...state, totalMovies: action.count };
     case Types.SHOW_MOVIES:
       return { ...state, movies: action.movies };
+    case Types.CHANGE_TITLE_SEARCH:
+      return { ...state, title: action.title };
     default:
       return state;
   }

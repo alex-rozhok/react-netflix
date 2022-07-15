@@ -1,17 +1,16 @@
 import React from 'react';
 import './styles/style.less';
-import { Hero, Movies, Footer, FilterBar, ErrorBoundary } from '@components';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { MainPage, NotFound } from '@pages';
 
 const App = (): React.ReactElement => (
   <>
-    <Hero />
-    <main className="main">
-      <FilterBar />
-      <ErrorBoundary>
-        <Movies />
-      </ErrorBoundary>
-    </main>
-    <Footer />
+    <Routes>
+      <Route path="/" element={<Navigate to="search" />} />
+      <Route path="/search/*" element={<MainPage />} />
+      <Route path="/search/:searchQuery/*" element={<MainPage />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   </>
 );
 

@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { Button } from '@components';
 import styles from './style.module.less';
@@ -6,13 +7,15 @@ import { useAction, useMoviesState } from '@hooks';
 import { filterTabs } from '@data';
 
 export const FilterList = (): ReactElement => {
-  const { changeGenresAction, fetchMoviesAction } = useAction();
+  const { fetchNewGenresAction } = useAction();
   const { genre } = useMoviesState();
 
+  const [searchParams, setSearchParams] = useSearchParams();
   const changeFilter = (clickedGenre: string) => {
     if (clickedGenre !== genre) {
-      changeGenresAction(clickedGenre);
-      fetchMoviesAction();
+      searchParams.set('genre', clickedGenre);
+      setSearchParams(searchParams);
+      fetchNewGenresAction(clickedGenre);
     }
   };
 

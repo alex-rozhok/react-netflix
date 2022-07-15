@@ -1,5 +1,4 @@
 export { Logo } from './Logo';
-export { Hero } from './Hero';
 export { Search } from './Search';
 export { Modal } from './Modal';
 export { Movies } from './Movies';
@@ -11,8 +10,8 @@ export { Dropdown } from './Dropdown';
 export { MovieForm } from './MovieForm';
 export { ErrorBoundary } from './ErrorBoundary';
 export { Button, Input, Textarea, Label, Select, DatePicker } from './common';
-export { SelectedMovie } from './SelectedMovie';
 export { Poster } from './Poster';
 export { MovieGenres } from './MovieGenres';
 export { Loader } from './Loader';
 export { Alert } from './Alert';
+export { Hero } from './Hero';
