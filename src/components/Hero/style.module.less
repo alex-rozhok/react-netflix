@@ -2,6 +2,12 @@
   padding: 20px 0;
   position: relative;
 
+  &__container {
+    display: flex;
+    flex-direction: column;
+    min-height: 30vw;
+  }
+
   &__background {
     position: absolute;
     top: 0;
@@ -31,10 +37,58 @@
   }
 
   &__search {
-    min-height: 30vw;
     display: flex;
     justify-content: center;
     flex-direction: column;
     padding: 60px;
+    flex-grow: 1;
+  }
+}
+
+.selectedMovie {
+  padding: 20px 0;
+  color: fadeout(#fff, 50%);
+  font-weight: 300;
+
+  &__container {
+    display: grid;
+    grid-template-columns: calc(~"100% / 3 - 40px") 1fr;
+    align-items: start;
+    gap: 60px;
+  }
+
+  &__title {
+    color: #fff;
+    font-size: 4rem;
+    margin-bottom: 10px;
+    font-weight: inherit;
+  }
+
+  &__rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    margin-left: 25px;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    color: #fff;
+  }
+
+  &__times {
+    padding: 30px 0;
+    font-size: 2.4rem;
+    color: #f65261;
+    display: flex;
+    gap: 50px;
+  }
+
+  &__overview {
+    font-size: 2rem;
+    line-height: 1.2;
   }
 }

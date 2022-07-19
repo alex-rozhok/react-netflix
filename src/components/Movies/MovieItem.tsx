@@ -1,9 +1,10 @@
 import React, { ReactElement, useState } from 'react';
 import styles from './style.module.less';
+import { useSearchParams } from 'react-router-dom';
 import { Poster, MovieGenres } from '@components';
 import { MovieOptions } from './MovieOptions';
 import { IMovie } from '@interfaces';
-import { useAction, useMoviesState } from '@hooks';
+import { useMoviesState } from '@hooks';
 
 interface IMovieItemProps {
   movie: IMovie;
@@ -14,13 +15,13 @@ export const MovieItem = ({ movie }: IMovieItemProps): ReactElement => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
   const handlerMouseOver = () => setShowOptions(true);
   const handlerMouseLeave = () => setShowOptions(false);
-
   const { selectedMovie } = useMoviesState();
-  const { selectMovieAction } = useAction();
 
+  const [searchParams, setSearchParams] = useSearchParams();
   const clickHandler = () => {
     if (selectedMovie?.id !== movie.id) {
-      selectMovieAction(movie);
+      searchParams.set('movie', String(movie.id));
+      setSearchParams(searchParams);
       document.documentElement.scrollTo(0, 0);
     }
   };

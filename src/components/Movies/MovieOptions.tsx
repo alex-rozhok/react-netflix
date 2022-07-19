@@ -4,6 +4,7 @@ import { ThreeDotsIcon } from '@icons';
 import { Modal, MovieForm, Dropdown, Button } from '@components';
 import { IMovie } from '@interfaces';
 import { useAction, useMoviesState } from '@hooks';
+import { useSearchParams } from 'react-router-dom';
 
 interface IMovieOptionsProps {
   movie: IMovie;
@@ -42,6 +43,8 @@ export const MovieOptions = ({
   const { requestDeleteMovieAction, selectMovieAction, putMovieValuesAction } =
     useAction();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const toggleDropdown = () =>
     dispatch({
       isOptionsDropdown: !state.isOptionsDropdown,
@@ -60,7 +63,12 @@ export const MovieOptions = ({
 
   const deleteMovie = (id: number) => {
     requestDeleteMovieAction(id);
-    selectedMovie?.id === id && selectMovieAction();
+
+    if (selectedMovie?.id === id) {
+      selectMovieAction();
+      searchParams.delete('movie');
+      setSearchParams(searchParams);
+    }
   };
 
   const confirmDelete = () => {

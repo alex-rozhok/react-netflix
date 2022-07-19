@@ -30,6 +30,7 @@ export interface IMoviesState {
   sortBy: string;
   selectedMovie?: IMovie;
   totalMovies: number;
+  title?: string;
 }
 
 export type TAlertStatus = 'success' | 'error' | '';
